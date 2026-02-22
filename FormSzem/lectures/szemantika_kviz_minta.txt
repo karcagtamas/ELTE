@@ -1,0 +1,111 @@
+1. Mikor kompozicionális egy szemantikadefiníció?
+
+	a) Ha függvények vagy relációk kompozíciójával adja meg a programok jelentését. 
+	b) Ha szekvenciális kompozícióra vezeti vissza a vezérlési szerkezetek jelentését. 
+	c) Ha az összetett szerkezetek jelentését a részeik jelentéséből komponálja meg. 
+	d) Ha az összetett szerkezetek jelentését függvénykompozícióval adja meg.
+
+2. Az alábbi konfigurációk közül melyekre igaz, hogy beragadtak (stuck) tetszőleges 𝑠 mellett?
+
+	a) ⟨abort, 𝑠⟩ 
+	b) ⟨abort; skip, 𝑠⟩ 
+	c) ⟨skip; abort, 𝑠⟩ 
+	d) ⟨if x > 0 then abort else skip, 𝑠⟩ 
+	e) ⟨if true then abort else skip, 𝑠⟩ 
+	f) ⟨if false then abort else skip, 𝑠⟩ 
+
+3. Mely alábbi 𝑆 programok esetén teljesül tetszőleges 𝑠 állapotra és 𝑆' programra, hogy ⟨𝑆, 𝑠⟩ ⇒ᵏ ⟨𝑆, 𝑠⟩ (k > 0)?
+
+	a) skip 
+	b) while true do 𝑆' 
+	c) (while true do 𝑆') ; (while true do 𝑆') 
+	d) while true do (𝑆' ; while true do 𝑆') 
+	e) while true do skip 
+
+4. A következők közül melyek teljesülnek a While magnyelv small-step szemantikájára vonatkozóan (tetszőleges 𝑆, 𝑠, 𝑠' esetén)?
+
+	a) 𝓢ₛₒₛ⟦𝑆⟧𝑠 = 𝑠' ⟺ ⟨𝑆, 𝑠⟩ ⇒* 𝑠' 
+	b) ⟨𝑆, 𝑠⟩ ⇒ 𝑠' ⟹ 𝓢ₛₒₛ⟦𝑆⟧𝑠 = 𝑠' 
+	c) 𝓢ₛₒₛ⟦𝑆⟧𝑠 = undef ⟹ ∃𝑆',∃𝑠': ⟨𝑆, 𝑠⟩ ⇒ ⟨𝑆', 𝑠'⟩ 
+	d) 𝓢ₛₒₛ⟦𝑆⟧𝑠 = 𝑠' ⟹ ⟨𝑆, 𝑠⟩ ⇒ 𝑠' 
+
+5. A következők közül melyik kompozicionális definíciója az aritmetikai negációnak?
+
+	a) 𝓐⟦−𝑎⟧ = 𝓐⟦0 − 𝑎⟧ 
+	b) 𝓐⟦−𝑎⟧𝑠 = 𝓐⟦0⟧𝑠 − 𝓐⟦𝑎⟧𝑠 
+	c) 𝓐⟦−𝑎⟧𝑠 = 𝓝⟦0⟧ − 𝓐⟦𝑎⟧𝑠 
+	d) 𝓐⟦−𝑎⟧𝑠 = 𝟎 − 𝓐⟦a⟧𝑠 
+	e) 𝓐⟦−𝑎⟧ = λ𝑠.𝟎 − 𝓐⟦𝑎⟧𝑠 
+	f) 𝓐⟦−𝑎⟧𝑠 = 𝓐⟦𝑎⟧𝑠 − 𝓐⟦𝑎⟧𝑠 − 𝓐⟦𝑎⟧𝑠 
+
+6. Adott a következő While program (tegyük fel, hogy Var = {x}):
+
+	while feltétel do x := x + 1
+
+   A következők közül mely feltételek behelyettesítésével fog terminálni a program minden kezdőállapotban?
+
+	a) true 
+	b) false
+	c) x < 0 
+	d) ¬x = 0 
+
+7. A statikus szemantika...
+
+	a) a szintaxis környezetfüggő része. 
+	b) fordítási időben adja meg a program jelentését. 
+	c) a lokális változókat statikus változókkal váltja ki. 
+	d) szemben a dinamikussal, statikus névkötést definiál a programokban. 
+	e) kizár olyan programokat, amelyeknek nincs jelentése. 
+	f) definiálja a statikus változók tárolási módját. 
+	g) definiálja, mikor (statikusan) helyesen típusozott egy program. 
+
+8. Mely ekvivalenciák érvényesek a While nyelv (magnyelv+abort+or) big-step szemantikájában tetszőleges 𝑏 és 𝑆 mellett?
+
+	a) while true do 𝑆 ≡ abort 
+	b) while true do skip ≡ abort 
+	c) while false do 𝑆 ≡ abort 
+	d) while 𝑏 do 𝑆 ≡ if 𝑏 then (while 𝑏 do 𝑆) else skip 
+	e) 𝑆 ≡ 𝑆 or 𝑆 
+	f) 𝑆 ; 𝑆 ≡ 𝑆 or 𝑆 
+
+9. A következők közül melyik összefüggés teljesül a While magnyelv denotációs szemantikájában tetszőleges 𝑆 esetén?
+
+	a) 𝓢ds⟦𝑆⟧ ◦ 𝓢ds⟦skip⟧ = 𝓢ds⟦𝑆⟧
+	b) 𝓢ds⟦while false do skip⟧ = 𝓢ds⟦skip⟧
+   	c) 𝓢ds⟦while true do 𝑆⟧ = 𝓢ds⟦𝑆; while true do 𝑆⟧
+   	d) 𝓢ds⟦𝑆⟧ ◦ 𝓢ds⟦𝑆⟧ = 𝓢ds⟦𝑆⟧
+
+10. A következők közül melyek teljesülnek a While nyelv denotációs szemantikájára vonatkozóan (tetszőleges 𝑆 esetén)?
+
+	a) 𝑖𝑑 ⊑ 𝓢ds⟦skip⟧
+	b) ⊥ ⊑ 𝓢ds⟦𝑆⟧
+	c) 𝓢ds⟦while true do skip⟧ ⊑ 𝑖𝑑
+	d) 𝑖𝑑 ⊑ 𝓢ds⟦𝑆⟧
+	e) 𝓢ds⟦skip⟧ ⊑ 𝓢ds⟦while true do skip⟧
+	f) 𝑖𝑑 ⊑ ⊥
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1.c
+2.ab
+3.e
+4.abc
+5.cdef
+6.bc
+7.aeg
+8.abde
+9.abc
+10.abc
