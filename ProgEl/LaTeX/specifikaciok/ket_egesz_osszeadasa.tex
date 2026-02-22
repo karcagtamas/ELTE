@@ -1,0 +1,22 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[magyar]{babel}
+\setlength{\parindent}{0pt}
+% állapottérben a "vastag szár" jelöléshez, pl. egész számok halmaza
+\usepackage{amssymb}
+% specifikációban címkézett változó írásához, A=(x:Z,l:L) alakban
+\newcommand{\lv}{{:}}
+
+\begin{document}
+	\author{Zsolt Borsi}	
+\bigskip
+\bigskip
+
+Határozzuk meg két egész szám összegét.\\
+$A = (a\lv\mathbb{Z}, b\lv\mathbb{Z}, c\lv\mathbb{Z})$\\[2pt]
+$B = (a'\lv\mathbb{Z}, b'\lv\mathbb{Z})$\\[2pt]
+$Q = (a = a' \land b = b')$\\[2pt]
+$R = (Q \land c = a + b)$
+
+\end{document}

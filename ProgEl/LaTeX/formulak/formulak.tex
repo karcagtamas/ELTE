@@ -1,0 +1,68 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[inner=20truemm,outer=20truemm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[magyar]{babel}
+\usepackage{palatino}
+\usepackage{amsmath}   
+\usepackage{amssymb}
+\usepackage{nopageno}
+\setlength{\parindent}{0pt}
+\usepackage{xcolor}
+% struktogram rajzolásához be kell tölteni a .tex forrásfájllal azonos könyvtárba helyezett stuki.sty-t
+\definecolor{my_color}{RGB}{0,0,255}
+
+\begin{document}
+	\author{Zsolt Borsi}	
+	\bigskip
+	\bigskip
+
+% a -1 szám k+1 kitevőjű hatványát $(-1)^{k+1}$ alakban írjuk
+	
+\section*{Egyszerűbb formulák}
+\begin{itemize}
+\item \verb|$3\nmid 5$| \qquad\qquad $\color{my_color}\longrightarrow$ \qquad\qquad $3\nmid 5$
+
+\item \verb|$x\cdot y$| \qquad\qquad $\color{my_color}\longrightarrow$ \qquad\qquad $x\cdot y$
+
+\item \verb|$(-1)^k+1$| \qquad\qquad $\color{my_color}\longrightarrow$ \qquad\qquad $(-1)^k+1$
+
+\item \verb|$(-1)^{k+1}$| \qquad\qquad $\color{my_color}\longrightarrow$ \qquad\qquad $(-1)^{k+1}$
+
+\item \verb|$\mathbb{N}^+$| \qquad\qquad $\color{my_color}\longrightarrow$ \qquad\qquad $\mathbb{N}^+$
+
+\item \verb|$P \land \neg\pi \implies R$| \qquad\qquad $\color{my_color}\longrightarrow$ \qquad\qquad $P \land \neg\pi \implies R$
+
+\item \verb|$\forall i \in [1..n]\colon Q \land \pi_i \implies lf(S_i, R)$| \qquad\qquad $\color{my_color}\\
+\longrightarrow$\\
+ \qquad\qquad $\forall i \in \left[ 1..n\right]: Q \land \pi_i \implies lf(S_i, R)$
+
+\end{itemize}
+
+\section*{További példák}
+\begin{itemize}
+\item \verb|$\sum\limits_{i=1}^{n}x_i\cdot y_i$| \qquad\qquad $\color{my_color}\longrightarrow$ \qquad\qquad $\sum\limits_{i=1}^{n}x_i\cdot y_i$
+
+\item \verb|$P^{s\leftarrow x_1\cdot y_1, k \leftarrow 1}$| \qquad\qquad $\color{my_color}\\
+\longrightarrow$\\
+\qquad\qquad $P^{s\leftarrow x_1\cdot y_1, k \leftarrow 1}$
+
+\item \verb|$\sum_{i=1}^{k-1} a_i$| \qquad\qquad $\color{my_color}\longrightarrow$ \qquad\qquad $\sum_{i=1}^{k-1} a_i$
+
+\item \verb|$\sum|\textcolor{red}{\textbackslash limits}\verb|_{i=1}^{k-1} a_i$| \qquad\qquad $\color{my_color}\longrightarrow$ \qquad\qquad $\sum\limits_{i=1}^{k-1} a_i$
+
+\item \verb|$\bigvee_{i=1}^{n}(x_i > 0)$| \qquad\qquad $\color{my_color}\longrightarrow$ \qquad\qquad $\bigvee_{i=1}^{n}(x_i > 0)$
+	
+\item \verb|$\bigvee|\textcolor{red}{\textbackslash limits}\verb|_{i=1}^{n}(x_i > 0)$| \qquad\qquad $\color{my_color}\longrightarrow$ \qquad\qquad $\bigvee\limits_{i=1}^{n}(x_i > 0)$
+			
+\item \verb|$\bar{A}=\bigcup\limits_{A \leq B} B$| \qquad\qquad $\color{my_color}\longrightarrow$ \qquad\qquad $\bar{A}=\bigcup\limits_{A \leq B} B$
+	
+\item \verb|$S \subseteq A \times (\bar{A} \cup \{\mathbf{fail}\})^{**}$| \qquad\qquad $\color{my_color}\\
+\longrightarrow$\\
+\qquad\qquad $S \subseteq A \times (\bar{A} \cup \{\mathbf{fail}\})^{**}$
+	
+\item \verb|$\mathcal{D}_{p(S)} = \{a \in A \mid S(a) \subseteq \bar{A}^*\}$| \qquad\qquad $\color{my_color}\longrightarrow$ \qquad\qquad $\mathcal{D}_{p(S)} = \{a \in A \mid S(a) \subseteq \bar{A}^*\}$
+		
+\end{itemize}
+
+\end{document}

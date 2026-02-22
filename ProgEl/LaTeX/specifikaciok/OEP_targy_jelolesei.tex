@@ -1,0 +1,175 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[magyar]{babel}
+\usepackage{palatino}
+\usepackage{amsmath}   
+\usepackage{amssymb}
+% struktogram rajzolásához be kell tölteni a .tex forrásfájllal azonos könyvtárba helyezett stuki.sty-t
+\usepackage{stuki}
+% specifikációban címkézett változó írásához, A=(x:Z,l:L) alakban
+\newcommand{\lv}{{:}}
+
+% a specifikáció utófeltételében használt nagy függvények definiálása
+\DeclareMathOperator*{\SEARCH}{\textit{\small \textbf{SEARCH}}}
+\DeclareMathOperator*{\SELECT}{\textit{\small \textbf{SELECT}}}
+\DeclareMathOperator*{\MAX}{\textit{\small \textbf{MAX}}}
+
+\begin{document}
+	\author{Zsolt Borsi}	
+	\bigskip
+	\bigskip
+
+\begin{center}
+{\Large Intervallumos programozási tételek}
+\end{center}
+\bigskip
+
+%%% ÖSSZEGZÉS TÉTEL
+\textbf{Összegzés}\\
+\medskip
+%%% specifikáció
+$A = (m\lv\mathbb{Z}, n\lv\mathbb{Z}, s\lv\mathbb{Z})$\\[2pt]
+$Ef = (m = m' \land n = n')$\\[2pt]
+$Uf = (Ef \land s = \sum\limits_{i=m}^{n}f(i))$
+
+%%% struktogram
+\medskip
+\begin{stuki}
+  \stm{s:= 0}
+  \begin{WHILE}{1}{\stm{i = m .. n}}
+      \stm{s:= s + f(i)}
+  \end{WHILE}
+\end{stuki}
+\bigskip
+
+%%% SZÁMLÁLÁS TÉTEL
+\textbf{Számlálás}\\
+\medskip
+%%% specifikáció
+$A = (m\lv\mathbb{Z}, n\lv\mathbb{Z}, c\lv\mathbb{Z})$\\[2pt]
+$E\!f = ( m=m' \land n=n' )$\\[6pt]
+$U\!f = ( E\!f \land c = \sum\limits_{\substack{i=m\\[2pt]  \beta(i)}}^{n} 1)$
+% A\substack{arg1\\ arg2} azért kell, mert mind az arg1 és az arg2 a nagyoperátor alá kell kerüljön, külön sorba
+
+%%% struktogram
+\medskip
+\begin{stuki}
+  \stm{c:= 0}
+  \begin{WHILE}{2}{\stm{i = m..n}}
+    \begin{IF}{1}{\stm{\beta(i)}}
+      \stm{c:= c+1}
+      \ELSE
+      \stm{SKIP}
+    \end{IF}
+  \end{WHILE}
+\end{stuki}
+
+\bigskip
+
+%%% MAXIMUMKIVÁLASZTÁS TÉTEL
+\textbf{Maximumkiválasztás}\\
+\medskip
+%%% specifikáció
+$A = (m\lv\mathbb{Z}, n\lv\mathbb{Z}, max\lv\mathcal{H}, ind\lv\mathbb{Z})$\\[2pt]
+$E\!f = ( m=m' \land n=n' \land m \le n )$\\[6pt]
+$U\!f = (E\!f \land (max,ind) = \MAX\limits_{i=m}^{n} f(i))$
+
+%%% struktogram
+\begin{stuki}
+  \stm{max, ind:= f(m), m}
+  \begin{WHILE}{2}{\stm{i = m+1..n}}
+    \begin{IF}{1}{\stm{max < f(i)}}
+      \stm{max,ind:= f(i),i}
+      \ELSE
+      \stm{SKIP}
+    \end{IF}
+  \end{WHILE}
+\end{stuki}
+
+\bigskip
+
+%%% KIVÁLASZTÁS TÉTEL
+\textbf{Kiválasztás}\\
+\medskip
+%%% specifikáció
+$A = (m\lv\mathbb{Z}, i\lv\mathbb{Z})$\\[2pt]
+$E\!f = ( m=m' \land \exists k \ge m\colon \beta(k) )$\\[6pt]
+$U\!f = (E\!f \land i = \SELECT\limits_{i\ge m}^{} \beta(i))$
+
+%%% struktogram
+\medskip
+\begin{stuki}[4cm]
+  \stm{i:= m}
+  \begin{WHILE}{1}{\stm{\neg\beta(i)}}
+      \stm{i:= i + 1}
+  \end{WHILE}
+\end{stuki}
+\bigskip
+
+%%% LINEÁRIS KERESÉS TÉTEL
+\textbf{Lineáris keresés}\\
+\medskip
+%%% specifikáció
+$A = (m\lv\mathbb{Z}, n\lv\mathbb{Z}, l\lv\mathbb{L}, ind\lv\mathbb{Z})$\\[2pt]
+$E\!f = ( m=m' \land n=n' )$\\[6pt]
+$U\!f = (E\!f \land (l,ind) = \SEARCH\limits_{i=m}^{n} \beta(i))$
+
+%%% struktogram
+\medskip
+\begin{stuki}
+  \stm{l,i:= hamis,m}
+  \begin{WHILE}{2}{\stm{\neg l \land i \le n}}
+      \stm{l,ind:= \beta(i),i}
+      \stm{i:= i + 1}
+  \end{WHILE}
+\end{stuki}
+\bigskip
+
+%%% OPTIMISTA ELDÖNTÉS TÉTEL
+\textbf{Optimista eldöntés}\\
+\medskip
+%%% specifikáció
+$A = (m\lv\mathbb{Z}, n\lv\mathbb{Z}, l\lv\mathbb{L})$\\[2pt]
+$E\!f = (m=m' \land n=n')$\\[6pt]
+$U\!f = (E\!f \land l = \forall\!\SEARCH\limits_{i=m}^{n} \beta(i))$
+
+%%% struktogram
+\medskip
+\begin{stuki}
+  \stm{l,i:= igaz,m}
+  \begin{WHILE}{2}{\stm{l \land i \le n}}
+      \stm{l:= \beta(i)}
+      \stm{i:= i + 1}
+  \end{WHILE}
+\end{stuki}
+\bigskip
+
+%%% FELTÉTELES MAXIMUMKERESÉS TÉTEL
+\textbf{Feltételes maximumkeresés}\\
+\medskip
+$A = (m\lv\mathbb{Z}, n\lv\mathbb{Z}, l\lv\mathbb{L}, max\lv\mathcal{H}, ind\lv\mathbb{Z})$\\[2pt]
+$E\!f = (m=m' \land n=n')$\\[6pt]
+$U\!f = (E\!f \land (max,ind) = \MAX\limits_{\substack{i=m\\[2pt] \beta(i)}}^{n} f(i))$
+
+%%% struktogram
+\medskip
+\begin{stuki}[12cm]
+  \stm{l:= hamis}
+  \begin{WHILE}{4}{\stm{i = m..n}}
+    \begin{CASE}{3}{16}
+      \WHEN[3]{\stm{\neg\beta(i)}}
+      \stm{SKIP}
+      \WHEN[8]{\stm{l \land \beta(i)}}
+      \begin{IF}{2}{\stm{max < f(i)}}
+        \stm{max,ind:= \\f(i),i}
+        \ELSE
+        \stm{SKIP}
+      \end{IF}
+      \WHEN[5]{\stm{\neg l \land \beta(i)}}
+        \stm{l,max,ind:= \\igaz,f(i),i}
+    \end{CASE}
+  \end{WHILE}
+\end{stuki}
+
+\end{document}
