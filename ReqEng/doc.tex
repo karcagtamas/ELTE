@@ -1,0 +1,645 @@
+\documentclass{scrreprt}
+\usepackage{listings}
+\usepackage{underscore}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{microtype}
+\usepackage[bookmarks=true]{hyperref}
+\usepackage{todonotes}
+\usepackage{adjustbox}
+\hypersetup{
+      pdftitle={Software Requirement Specification},
+      pdfauthor={ELTE},
+      pdfsubject={OTP Requirement Specification},
+      pdfkeywords={LaTeX, ELTE, Requiremnts},
+      colorlinks=true,
+      linkcolor=blue,
+      citecolor=black,
+      filecolor=black,
+      urlcolor=purple,
+      linktoc=page
+}%
+\sloppy
+\def\myversion{1.14}
+\date{}
+
+%\title{Software Requirements Specification}
+\begin{document}
+
+\begin{flushright}
+      \rule{13cm}{3pt}\vskip1cm
+      \begin{bfseries}
+            \Huge{KÖVETELMÉNY ELEMZÉS}\\
+            \vspace{1.8cm}
+            OTP projekt\\
+            \vspace{1.8cm}
+            \LARGE{Verzió \myversion}\\
+            \vspace{1.8cm}
+            Eötvös Loránd Tudományegyetem\\ \small{Követelményelemzés}\\
+            \vspace{1.8cm}
+            \today\\
+      \end{bfseries}
+\end{flushright}
+
+\renewcommand{\contentsname}{Tartalomjegyzék}
+\tableofcontents
+
+\chapter*{Verzió előzmények}
+
+\begin{center}
+      \begin{adjustbox}{angle=270}
+            \begin{tabular}{|c|c|c|c|}
+                  \hline
+                  Verzió & Dátum         & Szerkesztő(k)      & Leírás                                                     \\
+                  \hline
+                  1.0    & 2023. 11. 04. & Karcag Tamás       & Dokumentum alapjának létrehozása                           \\
+                  \hline
+                  1.1    & 2023. 11. 06. & Szauter Ábel       & Bevezetés írása                                            \\
+                  \hline
+                  1.2    & 2023. 11. 11. & Karcag Tamás       & Bevezetes bővítése és követelmények számozása              \\
+                  \hline
+                  1.3    & 2023. 11. 18. & Szauter Ábel       & Bevezetés módosítása, 2.2 és 2.3 alpont                    \\
+                  \hline
+                  1.4    & 2023. 11. 19. & Szauter Ábel       & 2.4 elkezdése, 2.5 és 2.6 alpont                           \\
+                  \hline
+                  1.5    & 2023. 11. 19. & Halmai Kristóf     & 2.7 elkészítése                                            \\
+                  \hline
+                  1.6    & 2023. 11. 19. & Karcag Tamás       & 2.8, 3.1 alpontok elkeszitese                              \\
+                  \hline
+                  1.7    & 2023. 11. 23. & Peterdi Tamás      & 2.1 alpont kibővítése                                      \\
+                  \hline
+                  1.8    & 2023. 11. 26. & Peterdi Tamás      & 1. fejezet: alvállalkozók                                  \\
+                         &               &                    & 1.3 alpont: fejlesztés folyamata                           \\
+                         &               &                    & 2. fejezet: fő követelmények strukturálása                 \\
+                         &               &                    & T.02 specifikálása                                         \\
+                  \hline
+                  1.9    & 2023. 11. 26. & Karcag Tamás       & Glossary alapja és 2.5 bővítése (Biztonsági követelmények) \\
+                  \hline
+                  1.10   & 2023. 11. 26. & Szauter Ábel       & 2.3.5-8 alpontok                                           \\
+                  \hline
+                  1.11   & 2023. 11. 26. & Halmai Kristóf     & 4.1 elkészítése                                            \\
+                  \hline
+                  1.12   & 2023. 11. 26. & Pribyll Rómeó      & 2.3.3 kibővítése, 2.3.9 elkészítése                        \\
+                  \hline
+                  1.13   & 2023. 11. 27. & Kemenceiova Vivien & 2.4.1, 2.4.2 elkészítése                                   \\
+                  \hline
+                  1.14   & 2023. 11. 28. & Schaum Béla        & hibajavítások, szövegpontosítások, [al]címek fordítása     \\
+                  \hline
+                  1.15   & 2023. 11. 29. & Karcag Tamás       & 3.1 (Hardware interfészek), javítások                      \\
+                  \hline
+                  1.16   & 2023 12. 03.  & Szauter Ábel       & 3.2, 4.2-5 alpontok                                        \\
+                  \hline
+                  1.17   & 2023 12. 03.  & Karcag Tamásl      & Typo javítások, kommunikációs fejezet pontosítása (3.2)    \\
+                  \hline
+            \end{tabular}
+      \end{adjustbox}
+\end{center}
+
+\chapter{Bevezetés}
+
+\section{A Projekt bemutatása}
+A projekt célja egy olyan különböző szoftverek tesztelését elősegítő környezet (továbbiakban: tesztkörnyezet) létrehozása az OTP számára (továbbiakban:
+Megrendelő), mely rendelkezik a következő tulajdonságokkal:
+\begin{itemize}
+      \item A tesztkörnyezet egy biztonságos környezetet biztosít olyan alkalmazások és szoftverek tesztelésére, melyek veszélyesek lehetnek (továbbiakban tesztelendő
+            szoftverek)
+            \begin{itemize}
+                  \item A tesztkörnyezet egy konténer technológián alapuló szoftver mely a gazda rendszertől szeparáltan fut
+                  \item A tesztkörnyezet zárt rendszert képez így megakadályozva a tesztelendő szoftverek kommunikációját a külvilággal
+            \end{itemize}
+      \item A tesztkörnyezet monitorozza a tesztelendő szoftverek tevékenységét
+      \item A tesztkörnyezet visszajelzést ad a tesztelendő szoftverek céljairól és tevékenységéről
+      \item A tesztkörnyezet lehetővé teszi, hogy a tesztelendő szoftvereket automatikus módon lehessen tesztelni
+\end{itemize}
+A projekt sikerességének feltétele a tesztkörnyezet biztonságos működése.
+A megrendelő elvárása, hogy a tesztkörnyezet határidőig elkészüljön. A végső cél egy olyan szoftver létrehozása mely konténer technológián alapul, így a külvilágtól elzárva lehet különböző adatlopásra, veszélyes tevékenységre képes szoftvereket futtatni benne, hogy ezek a szoftverek ne tudjanak kárt tenni a külső rendszerben, míg tevékenységüket monitorozva megkapjuk azon fontos információkat, melyek segítségével megtudjuk, hogy a tesztelendő szoftverek hogyan, hol és milyen formában próbálnak meg adatot lopni vagy más veszélyes tevékenységet folytatni.
+\newline
+Alapvető szempontok a biztonság és a tesztelendő szoftverek tevékenységének megismerése, hogy a mengrendelő ilyen módon tudja azonosítani, hogy a kiberbűnözők hogyan és hol próbálnak ezekkel a szoftverekkel kárt okozni.
+A tesztkörnyezet konténer környezetéből minden kommunikáció tiltott a külvilág felé, ugyanakkor a megrendelővel megállapodtunk, hogy a tesztelendő szoftver kommunikációra tett kísérleteit monitorozva a tesztelő dönthet úgy, hogy egyes kéréseket manuálisan enged kijutni a környzetből ezzel is ellenőrizve a tevékenység okát és következményét.
+A tesztkörnyezetet tervezett határideje a fejlesztés kezdetétől számított fél év, a költségvetés korlátlan. A tesztkörnyezet megvalósítása komplexitása miatt bonyolult feladat, ezért fázisokra és részfeladatokra bontottuk.
+\newline
+A fejlesztés részfeladatai kiadhatóak alvállalkozók részére. A megbízás során előnyt élvez az az alvállakozó, aki tanúsítvánnyal (például ISO:27001) rendelkezik. A megbízás feltétele a papíralapú szerződéskötés. Kommunikáció elektronikusan, e-mailek használatával zajlik a felek között. Elvárás az alkalmazott alvállalkozókkal szemben is a teljes és helyes munkavégzés, a jelen dokumentum által lefektetett követelmények és szempontok szerint.
+
+\section{Célközönség}
+
+\begin{itemize}
+      \item \textbf{Fejlesztők}:
+            A fejlesztők információkat találnak a tesztkörnyezethez kapcsolódó hardver- és szoftverkövetelményekről, hálózati konfigurációról és hozzáférés-szabályozásról. A fenyegetésszimulációs eszközök műszaki részleteire és a meglévő rendszerekkel való integrációra kell összpontosítaniuk.
+      \item \textbf{Projektmenedzserek}:
+            A projekt menedzsereinek figyelmet kell fordítaniuk a tesztkörnyezet létrehozásának céljaira, ütemezésére és erőforrás-allokációjára. Érdeklődni fognak a tesztelési eljárások és a dokumentációk iránt, amelyek biztosítják, hogy a projekt helyesen haladjon, és összhangban legyen a szervezeti célokkal.
+      \item \textbf{Felhasználók}:
+            A végfelhasználók nem léphetnek kapcsolatba közvetlenül a tesztkörnyezettel, de tisztában kell lenniük az általuk használt rendszerekre gyakorolt esetleges hatásokkal. A dokumentációs és képzési rész alapvető fontosságú a felhasználók számára, hogy megértsék a tesztelési tevékenységek célját és lehetséges eredményeit.
+      \item \textbf{Tesztelők}:
+            A tesztelők lesznek a tesztkörnyezet elsődleges felhasználói. Alaposan meg kell vizsgálniuk a tesztelési eljárásokat, a hardver- és szoftverkövetelményeket, valamint a fenyegetésszimulációhoz rendelkezésre álló eszközöket. A naplózó, jelentéskészítő és elemző eszközökre vonatkozó részletes információk elengedhetetlenek szerepükhöz.
+      \item \textbf{Dokumentáció írók}:
+            A dokumentációírók a dokumentációs és képzési részre összpontosítanak, hogy felhasználói kézikönyveket és útmutatókat készítsenek a tesztkörnyezet működtetéséhez és karbantartásához. Figyelniük kell a beállítás és konfiguráció átfogó dokumentációjára is.
+\end{itemize}
+
+\section{Fejlesztés folyamata}
+A projekt sikeressége szempontjából kulcsfontosságú a fejlesztési fázis. E folyamattal szemben az alábbi elvárások adottak, melyek a gördülékeny és ellenőrzött
+haladást hivatottak szolgálni:
+\begin{itemize}
+      \item A fejlesztésben résztvevő személyek a Megrendelő verziókezelő rendszerébe integrálva végzik a munkát.
+      \item Elvárt a rendszeres, heti projekt státuszon való részvétel, ahol a felek egyeztetik az elért eredményeket és a felmerülő kérdéséket, akadályokat.
+\end{itemize}
+A projekt feladatainak időzítését, időtartamát, függőségeit vizuálisan szemléltetni hivatott egy Gantt diagram. Ez a projekt indulásakor, a felmerülő prioritások és allokálható erőforrások keretein belül meghatározandó.
+
+\chapter{Követelmények}
+
+\section{Követelmények számozása és felépítése}
+
+Ebben az alfejezetben részletesen leírjuk, hogy hogyan történt a dokumentumban található konkrét követelmények besorolása. Az alábbiakban ismertetjük a
+hierarchikus struktúrát és a sorszámozási módszert, amelyeket alkalmaztunk az egyértelműség és az egyszerű hivatkozások érdekében.
+
+A fő témakörök egyedi betűjelölést kapnak. Például: A. Az altémák sorszámot kapnak. Például: 01. Egy konkrét követelmény így, e példa szerint, a
+következőképpen egyértelműen hivatkozható: A.01.
+
+\begin{itemize}
+      \item \textbf{H} - Futtató (host) környezeti követelmények
+            \begin{itemize}
+                  \item \textbf{\hyperref[H.01]{H.01}} - Hardver követelmények
+                  \item \textbf{\hyperref[H.02]{H.02}} - Szoftver követelmények
+            \end{itemize}
+      \item \textbf{T} - Tesztkörnyezet funkcionális követelményei
+            \begin{itemize}
+                  \item \textbf{\hyperref[T.01]{T.01}} - Funkcionalitás
+                  \item \textbf{\hyperref[T.02]{T.02}} - Interfész
+                  \item \textbf{\hyperref[T.03]{T.03}} - Tesztkörnyezet konfigurálása
+                  \item \textbf{\hyperref[T.04]{T.04}} - Tesztelés elindítása
+                  \item \textbf{\hyperref[T.05]{T.05}} - Tesztelés leállása és leállítása
+                  \item \textbf{\hyperref[T.06]{T.06}} - Tesztkörnyezet státusza
+                  \item \textbf{\hyperref[T.07]{T.07}} - Valós idejű monitorozás
+            \end{itemize}
+      \item \textbf{M} - Monitorozás funkcionális követelményei
+            \begin{itemize}
+                  \item \textbf{\hyperref[M.01]{M.01}} - Monitorozott tevékenységek definiálása
+                  \item \textbf{\hyperref[M.02]{M.02}} - Monitorozott tevékenységek azonosítása
+                  \item \textbf{\hyperref[M.03]{M.03}} - Eredmények összegyűjtése, riportálása
+            \end{itemize}
+      \item \textbf{S} - Biztonsági követelmények
+            \begin{itemize}
+                  \item \textbf{\hyperref[S.01]{S.01}} - Hozzáférési megkötések
+                  \item \textbf{\hyperref[S.02]{S.02}} - Kockázati tényezők minimalizálása
+                  \item \textbf{\hyperref[S.03]{S.03}} - Kommunikációs biztonság
+            \end{itemize}
+\end{itemize}
+
+Minden követelményt egyértelműen és egyedi módon fogalmaztunk meg, hogy ne hagyjon teret félreértéseknek vagy kétértelműségeknek. A nyelvezet egyszerű és
+pontos, elősegítve a követelmények pontos megértését.
+
+A követelményeket rendszeresen felülvizsgáljuk és minden változás után újra jóváhagyjuk a projekt résztvevői közreműködésével.
+
+\section{Futtató környezeti követelmények}
+\subsection{[H.01] Hardver követelmények} \label{H.01}
+Elvárás, hogy a futtató számítógép rendelkezzen az alábbi hardver követelményekkel:
+\begin{itemize}
+      \item 64-bites processzor és SLAT
+      \item 4Gb (RAM) rendszermemória
+      \item A BIOS-ban engedélyezve kell lennie a virtualizációnak
+\end{itemize}
+\subsection{[H.02] Szoftver követelmények} \label{H.02}
+A tesztkörnyezet Docker segítségével fog elszeparált környezetet létrehozni. Hogy Windows-ra és Linux alapú operációs rendszerekre írt szoftvereket is tudjunk
+tesztelni, két Docker image-t kell majd létrehozni, ezekben biztosítva a fordítást, futtatást, monitorozást biztosító eszközöket, illetve a szeparáltságot
+biztosító technológiákat. A futtató környezetre telepíteni kell a Dockert, melyhez a következő rendszertulajdonságokra van szükségünk:
+\begin{itemize}
+      \item Windows 11 esetén
+            \begin{itemize}
+                  \item 64-bit: Home vagy Pro 21H2 vagy magasabb verzió
+                  \item 64-bit: Enterprise vagy Education 21H2 vagy magasabb verzió
+            \end{itemize}
+      \item Windows 10 esetén
+            \begin{itemize}
+                  \item 64-bit: Home vagy Pro 21H2 vagy magasabb verzió
+                  \item 64-bit: Enterprise vagy Education 20H2 vagy magasabb verzió
+            \end{itemize}
+      \item Ubuntu esetén
+            \begin{itemize}
+                  \item Ubuntu Kinetic 22.10
+                  \item Ubuntu Jammy 22.04 (LTS)
+                  \item Ubuntu Focal 20.04 (LTS)
+                  \item Ubuntu Bionic 18.04 (LTS)
+            \end{itemize}
+\end{itemize}
+Windows felhasználóként engedélyeznünk kell a WSL2-t (Windows Subsystem on Linux).
+A konténer memóriájának bővítéséhez a mount opciót használva egy külső forrás például egy kötet vagy mount pont hozzárendelhető a konténerhez.
+
+\section{Tesztkörnyezet funkcionális követelményei}
+\subsection{Termék perspektíva}
+A termék a Megrendelő részére készül kizárólagosan, harmadik fél számára nem lesz elérhető. A termék egyedi, önálló szoftver, mely nem tagja egyetlen
+szoftvercsaládnak sem. A termék létrehozásának célja, hogy a megrendelő biztonságosan tudja tesztelni a veszélyt jelentő szoftvereket, és tudja monitorozni
+ezek működését, így megtudva azt, hogy ezek a szoftverek és a szoftvereket használó kiberbűnözők hol és hogyan próbálnak adatot lopni, illetve a célrendszerbe
+betörni.
+
+\subsection{Tervezést és megvalósítást érintő korlátozások}
+A Megrendelő részéről a következő kérések érkeztek, melyekben meg is egyeztünk:
+\begin{itemize}
+      \item A tesztkörnyezetet C nyelv használatával fogjuk lefejleszteni
+      \item A tesztkörnyezetnek CI -ban kell tudni futnia
+      \item A tesztkörnyezetnek konfigurálhatónak kell lennie (A config fájl json formátumú lesz)
+      \item A tesztkörnyezetnek támogatnia kell a Sonarqube kódellenőrzést
+      \item A tesztkörnyezetnek bővíthető memóriával kell rendelkeznie (mount)
+      \item A tesztkörnyezetnek tudnia kell futtatni Linux alapú operációs rendszerekre és Windowsra írt szoftvereket is
+      \item A tesztkörnyezetnek biztonságosnak kell lennie, hogy a futtató rendszer meg ne sérülhessen
+\end{itemize}
+
+\subsection{[T.01] Funkcionalitás} \label{T.01}
+A tesztkörnyzetnek az alábbi funkciókat kell tudnia, ellátnia:
+\begin{itemize}
+      \item Konténer technológiával elszeparált környezetet hoz létre, mely védi a futtató környezetet és megakadályozza az információ továbbitást harmadik fél részére
+      \item Lehetővé teszi szoftverek fordítását és futtatását méretbeli felsőkorlát nélkül
+      \item Lehetővé teszi a tesztelendő szoftverek monitorozását
+      \item Lehetővé teszi a szoftverek automata tesztelését
+      \item Képes 7 napon keresztül folyamatosan futni és adatatot gyűjteni a környezetben zajló tevékenységekről
+      \item Képes pontos jelentést adni arról, hogy a benne futó szoftver milyen kommunikációt kísérel meg, milyen erőforrásokat használ fel, illetve hogyan viselkedik
+      \item A fontos információk kiemelése után a tesztnek és az eszköznek minden lenyomatát tudja törölni
+\end{itemize}
+
+A tesztkörnyezetet az alábbi csoportok fogják használni:
+\begin{itemize}
+      \item \textbf{Fejlesztők:}
+            A fejlesztők elsősorban a tesztkörnyezet funkcionalitását használják majd a fejlesztési ciklusok során. A céljuk az lesz, hogy új kódokat teszteljenek és validáljanak a környezetben. Ez a környezet lehetővé teszi számukra, hogy a kódokat biztonságos keretek között futtassák. Fontos, hogy a környezet számukra lehetőséget biztosítson a gyors és rugalmas tesztelésre, miközben a kritikus adatokat védett környezetben kezeli. Ezenkívül a monitorozási és jelentési funkciók segítik a fejlesztőket abban, hogy megértsék a kódjuk viselkedését és hatásait, így fejleszthetik azokat a megfelelő irányba.
+      \item \textbf{Üzemeltetők:}
+            Az üzemeltetők számára a stabilitás és a hosszú távú megbízhatóság a legfontosabb szempont. Ez a csoport a tesztkörnyezet rendszeres fenntartásáért és karbantartásáért felel, hogy az folyamatosan és megbízhatóan működjön. Rendszeres adatgyűjtésre és monitorozásra van szükségük, hogy nyomon követhessék a környezetben zajló eseményeket és esetleges hibákat időben azonosíthassák. Az adattörlési funkció fontos számukra a tesztelések utáni adatok védelmében és a biztonságos működés fenntartásában.
+      \item \textbf{Pentesterek:}
+            A pentesterek elsődleges feladata a szoftverbiztonság ellenőrzése és a sebezhetőségek felderítése a tesztkörnyezetben. Ez a csoport különféle tesztekkel és szimulációkkal járja körbe a rendszert, hogy azonosítsa a potenciális kockázatokat és sebezhetőségeket. A céljuk a biztonsági rések feltárása és dokumentálása, hogy ezeket javításra vagy beavatkozásra jelentsék a biztonsági csapatnak vagy a fejlesztőknek.
+      \item \textbf{Biztonsági szakértők:}
+            A biztonsági szakértők a rendszer átfogó biztonságának felügyeletéért felelősek. Az ő szerepük a biztonsági stratégiák kialakítása és a rendszer folyamatos védelmének biztosítása. Számukra fontos, hogy a tesztkörnyezet a legújabb biztonsági követelményeknek megfelelően működjön, és azonosítani tudják a szoftverek kommunikációjában és viselkedésében rejlő potenciális veszélyeket.
+      \item \textbf{CISO:}
+            A CISO számára a tesztkörnyezet által biztosított információk stratégiai jelentőségűek. A tesztelések és monitorozás révén átfogó képet kaphat a vállalat szoftverrendszerének biztonságáról, és ezek alapján lehetősége van a vállalati szintű biztonsági stratégiák megtervezésére és végrehajtására. A CISO feladata az is, hogy biztosítsa, hogy a tesztkörnyezet mindig a legmagasabb biztonsági szabványoknak feleljen meg.
+\end{itemize}
+
+\subsection{[T.02] Interfész} \label{T.02}
+A tesztkörnyezet Command-Line Interface (CLI) jelleggel kell legyen kezelhető. A CLI alkalmazás a konténereken kívülről futva kezeli a tesztkörnyezet
+indítását, módosítását, monitorozását, felhasználva a Docker CLI saját parancsait. \newline A következő parancsokat kell szolgáltatnia a CLI alkalmazásnak:
+\begin{itemize}
+      \item \texttt{configure} - Módosítja a tesztkörnyezet konfigurációját.
+      \item \texttt{start-test} - Elindítja a tesztelését egy szoftvernek.
+      \item \texttt{stop-test} - Leállítja az épp futó tesztelést.
+      \item \texttt{status} - Visszaadja a pillanatnyi státuszát a tesztkörnyezetnek.
+      \item \texttt{monitor} - Valós idejű adatokat mutat a tesztkörnyezetről.
+\end{itemize}
+
+\subsection{[T.03] Tesztkörnyezet konfigurálása} \label{T.03}
+A tesztkörnyezet konfigurálása egy fájl segítségével fog megvalósulni, melynek a formátumáról a felek megegyeztek, és a json formátum mellett döntöttek. A json
+fájlban az alábbi mezők biztosan fognak szerepelni:
+\begin{itemize}
+      \item Verzió: a tesztkörnyezet verziószáma (readOnly, required mező)
+      \item Tűzfalszabályok: különböző szabályokat lehet hozzáadni/törölni
+      \item Maximum felhasználható erőforrás
+      \item DNS szerver
+      \item DNS whitelist
+\end{itemize}
+Egyelőre a felek ezekben a pontokban egyeztek meg, de ezentúl a konfigurációs paraméterek változhatnak a fejlesztőktől és a felhasználhatóságtól függően.
+\newline
+A tesztkörnyezet konfigurálása mellett a tesztelendő szoftverek konfigurációja is állítható lesz. A tesztelendő szoftverek méretének felső határát elkerülendő, a tesztelendő szoftverek és konfigurációs fájljaik volume mount-on keresztül lesznek átadva a konténernek a megfelelő beállítások mellett, hogy a szoftver ne tudjon kárt tenni a mount-olt könyvtárban és környezetében.
+
+\subsection{[T.04] Tesztelés elindítása} \label{T.04}
+Ahogy fentebb is írva van, a tesztelendő szoftvereket és konfigurációs fáljaikat egy, a futtató rendszeren lévő, könyvtárba kell elhelyezni, majd megadni ezt a
+könyvtárat a konténer mount opcióját használva. Ekkor a tesztelendő szoftverek és a konfigurációs fáljaik a megadott mount point-on elérhetőek lesznek a
+konténeren belül. \newline A tesztelés elindítására külön script-ek lesznek, melyek először elemzik a rendszer biztonságát, majd ha ezt megfelelőnek találták,
+lefordítják és/vagy lefuttatják a tesztelendő szoftvert. A tesztelendő szoftver config-ja állítható a konténeren belül.
+
+\subsection{[T.05] Tesztelés leállása és leállítása} \label{T.05}
+A teszt környezetnek 7 napon keresztül kell tudnia futnia beavatkozás nélkül, mely alatt monitoroznia kell tudni a tesztelendő szoftver tevékenységeit. A
+tesztkörnyezet nem definiált hiba esetén azonnal kill-el minden futó folyamatot, a log-okat lementi és leáll. A tesztkörnyezet kézzel leállítható, ezt a
+funkciót script-ek biztosítják, melyek ellenőrzik, hogy nem történt-e semmilyen nem definiált viselkedés, leállítják a futó folyamatokat és lementik a
+log-okat. A tesztkörnyezet a megadott tesztelendő szoftverek lefuttatása után magától leállítja a folyamatokat, lementi a log-okat, és leáll.
+
+\subsection{[T.06] Tesztkörnyezet státusza} \label{T.06}
+A tesztkörnyezet a státuszára kívülről a Docker Compose fog választ adni (melyet opcionálisan kibővíthetünk, hogy speciális információkat is mutasson). A
+konténerbe lépve a státusz scriptet meghívva részletes leírást kaphatunk a tesztkörnyezet állapotáról.
+
+\subsection{[T.07] Valós idejű monitorozás} \label{T.07}
+A valós idejű monitorozás során fontos áttekintést nyerni a tesztkörnyezet állapotáról. Az erőforrások kihasználtsága kulcsfontosságú; a CPU, memória és
+tárhely kihasználtsága mutatja a rendszer terhelését és lehetőséget ad az esetleges túlterheltség korai felismerésére. Emellett a hálózati forgalom figyelemmel
+kísérése elengedhetetlen, hiszen a belépési és kilépési forgalom mérése, valamint a hálózati késések figyelése segít az infrastruktúra teljesítményének és
+stabilitásának értékelésében. Az adatbázis- vagy tárolórendszer terheltsége is fontos tényező: a kérésenkénti válaszidők, tranzakciók száma és az adatbázis
+terheltsége segíthet a kritikus terhelési pontok azonosításában és a rendszer hatékonyabbá tételében.
+
+A tesztelési folyamat állapotát tekintve a riasztások száma és típusa kiemelten fontos. Ezek az esetleges hibák vagy rendszerproblémák korai jelei lehetnek,
+amelyek gyors beazonosítása és megoldása létfontosságú a rendszer stabilitásának és teljesítményének fenntartásához. Emellett a fő statisztikák és metrikák
+összegzik a tesztek eredményeit, például a sikeres tranzakciók számát, a hibás tranzakciók arányát vagy az átlagos válaszidőt. Ezek a mutatók részletesebb
+képet adnak a rendszer működéséről és segíthetnek azonosítani az esetleges gyenge pontokat. Végül, a teljesítmény-visszajelzések, mint például az erőforrások
+kihasználtsága, válaszidők vagy terhelés alatti változások, részletes betekintést nyújtanak a rendszer teljesítményébe és segítenek az optimalizációban és a
+hatékonyabb működés biztosításában.
+
+\section{Monitorozás funkcionális követelményei}
+
+\subsection{[M.01] Monitorozott tevékenységek definiálása} \label{M.01}
+A tesztkörnyezet célja, részletesen vizsgálja és folyamatosan figyelemmel kísérje a támadó eszközök viselkedését. Ennek megfelelően az alábbi fontos
+tevékenységi területeket kell meghatároznunk és szorosan monitoroznunk:
+
+\begin{itemize}
+      \item \textbf{Rendszerszintű Interakciók}
+            \begin{itemize}
+                  \item  Rendszerhívások, beleértve fájl-, hálózati-, és memória-műveleteket.
+            \end{itemize}
+            \begin{itemize}
+                  \item  Regisztrációs (registry) változások.
+            \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+      \item \textbf{Hálózati Tevékenységek}
+            \begin{itemize}
+                  \item  Bejövő és kimenő hálózati forgalom, beleértve a port- és protokoll-használatot.
+            \end{itemize}
+            \begin{itemize}
+                  \item  DNS lekérdezések.
+            \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+      \item \textbf{Fájlrendszer Műveletek}
+            \begin{itemize}
+                  \item  Fájlok létrehozása, módosítása, törlése.
+            \end{itemize}
+            \begin{itemize}
+                  \item  Rendszerkritikus vagy érzékeny mappákhoz és fájlokhoz való hozzáférés.
+            \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+      \item \textbf{Erőforrás-használat}
+            \begin{itemize}
+                  \item  CPU és memória használat monitorozása, potenciális túlterhelés jeleinek észlelése.
+            \end{itemize}
+\end{itemize}
+
+A folyamatos és valós idejű monitorozás révén a tesztkörnyezet képes lesz azonnal reagálni a rendellenességekre, biztosítva ezzel a rendszer stabilitását és
+biztonságát.
+
+\subsection{[M.02] Monitorozott tevékenységek azonosítása} \label{M.02}
+A tesztkörnyezetnek a meghatározott kritériumok alapján kell felismernie a különféle tevékenységeket, amihez különleges eszközöket és szkripteket használ. Ezen
+eszközök képesek automatikusan detektálni a rendszerhívásokat, fájlrendszeri műveleteket és hálózati tevékenységeket. Az eltérő rendszerhasználatot kiszűrni
+képes rendszerek, mint a Security Information and Event Management (SIEM) rendszerek, segítenek azonosítani a rendszer normál működésétől eltérő viselkedést. A
+rendszerhívások analízisekor olyan tényezőket veszünk figyelembe, mint a gyakoriság, szokatlan minták és az ismeretlen eredet. A hálózati tevékenységek
+esetében pedig az atipikus port- és protokoll-használat, valamint a nem engedélyezett DNS lekérdezések kerülnek ellenőrzésre. A fájlrendszeri interakcióknál a
+gyakori vagy rendhagyó fájlműveletek, valamint a kritikus területekhez való hozzáférés figyelhető meg. A biztonsági incidensek során az illetéktelen
+hozzáférési kísérletek és a rendszerkritikus beállítások változásai jelentenek fő szempontot. Ezenfelül egyedi szabályrendszer és algoritmusok segítségével
+azonosítjuk a tevékenységeket, és egy élő riasztási rendszer segít azonnal értesíteni a gyanús vagy szabálytalannak ítélt aktivitásokról.
+
+\subsection{[M.03] Eredmények összegyűjtése, riportálása} \label{M.03}
+
+\begin{itemize}
+      \item \textbf{Naplózás Módja és Helye}
+            \begin{itemize}
+                  \item  A tesztkörnyezet minden releváns eseményt naplóz, amely tartalmazza az esemény időpontját, az érintett rendszerkomponenst és az esemény részletes leírását.
+            \end{itemize}
+            \begin{itemize}
+                  \item  A naplózott adatokat egy biztonságos, központosított adatbázisban tároljuk, ami lehetővé teszi az adatok könnyű hozzáférhetőségét és kezelését.
+            \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+      \item \textbf{Összegyűjtött Eredmények Jelentési Formátuma}
+            \begin{itemize}
+                  \item  A tesztkörnyezet automatizált jelentéseket állít elő, amelyek összefoglalják a monitorozási tevékenység eredményeit, beleértve a statisztikákat.
+            \end{itemize}
+            \begin{itemize}
+                  \item A jelentések két fő formában készülnek: összefoglaló nézetben, amely gyors áttekintést nyújt, valamint részletes jelentésekben, amelyek mélyreható elemzést
+                        biztosítanak a tesztelés során gyűjtött adatokról.
+            \end{itemize}
+\end{itemize}
+
+\section{Biztonsági követelmények}
+
+\subsection{[S.01] Hozzáférési megkötések} \label{S.01}
+
+A rendszer hozzáférését körülvevő követelmények meghatározása kritikus fontosságú a biztonságos működés érdekében. Ezen követelmények meghatározzák, hogy
+milyen felhasználói csoportoknak és milyen feltételek mellett van engedélyük a termék használatára. A konténeren belül ez különböző felhasználókat jelent
+különböző jogokkal és lehetőségekkel.
+
+\subsubsection{Felhasználói Kategóriák}
+
+\begin{itemize}
+      \item \textbf{Adminisztrátorok}:
+            Teljes körű hozzáféréssel rendelkeznek a rendszer összes funkciójához és beállításához. Az adminisztrátorok felelősek a rendszer felügyeletéért és karbantartásáért.
+      \item \textbf{Felhasználók}:
+            Az átlagos felhasználók korlátozott hozzáféréssel rendelkeznek a rendszerhez. Ezen felhasználók jogosultságai az általuk végzett feladatok típusától függően kerülnek meghatározásra.
+\end{itemize}
+
+\subsubsection{Hozzáférési Feltételek}
+
+\begin{itemize}
+      \item Az adminisztrátorokat a belső jogosultságrendszerhez mérten kell kijelölni és csak a tényleges adminisztrátori feladatok ellátó személyeknek megadni ezt a
+            jogosultságkört.
+      \item A felhasználók hozzáférése korlátozott a szükséges feladatok ellátásához. Csak azon felhasználók rendelkezzenek hozzáféréssel, akik ténylegesen használják az
+            alkalmazást és szükségük van rá a munka teljesítéséhez.
+      \item A hozzáférési jogokat rendszeresen felül kell vizsgálni és frissíteni kell az aktuális szervezeti követelményekhez igazítva.
+      \item A hozzáférési adatoknak titkosnak kell maradniuk, és nem szabad azokat harmadik felekkel megosztani, kivéve, ha az szigorúan szükséges és azonosított engedély
+            alapján történik.
+      \item Az összes hozzáférési tevékenység naplózva lesz, beleértve a sikeres és sikertelen hozzáféréseket is.
+\end{itemize}
+
+\subsection{[S.02] Kockázati tényezők minimalizálása} \label{S.02}
+
+A kockázati tényezők minimalizálása érdekében számos óvintézkedést kell tenni, és specifikus funkcionalitásokat kell implementálni a rendszerben. Ezek a
+lépések hozzájárulnak ahhoz, hogy minimalizáljuk a katasztrófa lehetőségét és megerősítsük a rendszer biztonságát.
+
+\subsubsection{Óvintézkedések és Implementált Funkcionalitások}
+
+\begin{itemize}
+      \item \textbf{Automatikus Biztonsági Mentés}:
+            A rendszer rendszeresen készít automatikus biztonsági mentéseket, beleértve az adatbázist és a konfigurációs fájlokat is.
+            A mentések tárolása külön fizikai helyen történik, hogy az esetleges adatvesztés vagy rendszerhiba esetén lehetséges legyen a gyors helyreállítás.
+      \item \textbf{Rendszeres Kockázatértékelés}:
+            A rendszer üzemeltetői rendszeresen végzik el a kockázatértékelést, azonosítva potenciális veszélyforrásokat és biztonsági réseket. Az azonnali intézkedéseket megteszik a kockázatok minimalizálása érdekében.
+      \item \textbf{Rendszeres Biztonsági Frissítések}:
+            A rendszer minden komponense rendszeresen frissítésre kerül, beleértve az operációs rendszert, alkalmazásokat és biztonsági eszközöket is. A frissítések célja a ismert sebezhetőségek elhárítása és a biztonság fokozása.
+\end{itemize}
+
+Ezen óvintézkedések és implementált funkciók együttesen biztosítják, hogy a kockázati tényezők minimalizálva legyenek, és maximalizálják a rendszer ellenálló
+képességét potenciális katasztrófák ellen.
+
+\subsection{[S.03] Kommunikációs biztonság} \label{S.03}
+
+A hálózati kommunikáció biztonsága létfontosságú a tesztelési környezet számára. Az alábbiakban részletezzük, hogyan kell lekorlátozni a hálózati kommunikációt
+annak érdekében, hogy a tesztelés során a lehető legbiztonságosabb legyen.
+
+\subsubsection{Biztonsági intézkedések a Kommunikációban}
+
+\begin{itemize}
+      \item \textbf{Titkosított Kommunikáció}:
+            A hálózati kommunikáció során alkalmazott protokollok és csatornák titkosítottak legyenek. Ez magában foglalja a SSL/TLS-t vagy más erős titkosítási módszereket.
+      \item \textbf{Hálózati Szegmentáció}:
+            A tesztelési környezetet szigorú hálózati szegmentációval kell ellátni. Ez azt jelenti, hogy a tesztelési rendszer elkülönül más hálózati részektől, minimalizálva ezzel a potenciális támadási felületet.
+      \item \textbf{Tűzfalak és Hálózati Szabályok}:
+            A rendszeren tűzfalakat és szigorú hálózati szabályokat kell bevezetni annak érdekében, hogy szabályozzák a bejövő és kimenő hálózati forgalmat. Csak az elengedhetetlen protokollokat és portokat kell engedélyezni.
+      \item \textbf{Auditálhatóság és Naplózás}:
+            Minden hálózati kommunikációt naplózni kell, beleértve a sikeres és sikertelen próbálkozásokat is. Az auditálhatóság növeli a rendszer ellenőrizhetőségét és lehetővé teszi a potenciális fenyegetések gyors azonosítását.
+      \item \textbf{Hálózati Felügyelet}:
+            A hálózatot folyamatosan kell ellenőrizni és felügyelni a nemkívánatos tevékenységek azonosítása érdekében. Az automatizált rendszerfigyelés lehetővé teszi a gyors válaszreakciót a biztonsági incidensekre.
+      \item \textbf{Hálózati Szűrés}:
+            A nem szükséges hálózati protokollokat, csomag méreteket és címzéseket le kell tiltani. Csak azokat a protokollokat kell engedélyezni, amelyek szükségesek a tesztelési folyamatokhoz.
+\end{itemize}
+
+Ezen biztonsági intézkedések együttesen garantálják, hogy a hálózati kommunikáció a tesztelés során magas szintű biztonságot nyújtson, minimalizálva a
+potenciális biztonsági kockázatokat.
+
+\section{Felhasználói dokumentáció}
+A felhasználói dokumentációnak a rendszer alapvető részének kell lennie. Tömören és érthetően le kell fednie a működés minden aspektusát, különös figyelemmel a
+telepítésre, futtatásra és monitorozásra. Felépítésének a következőképpen kell kinéznie:
+
+\begin{enumerate}
+      \item \textbf{Bevezetés:}
+            \begin{itemize}
+                  \item A rendszer célja, célközönsége.
+                  \item Fontos funkciók és tulajdonságok áttekintése
+            \end{itemize}
+      \item \textbf{Telepítési Útmutató:}
+            \begin{itemize}
+                  \item Követelmények
+                  \item Telepítés menete lépésről lépésre
+                  \item A telepítés során gyakran felmerülő problémák és megoldásaik
+            \end{itemize}
+      \item \textbf{Üzemeltetési Útmutató:}
+            \begin{itemize}
+                  \item Részletes utasítások a rendszer működtetéséhez: tesztelési munkamenetek beállítása és elindítása (eszközök kiválasztása, konfigurálása), kimenetek elemzése
+                  \item GUI- és parancssori műveletek, szkriptek magyarázata
+                  \item Beállítások konfigurálása JSON-fájlban: környezetspecifikus paraméterek, monitorozás, tűzfalszabályok, futási limitek (idő/erőforrások)
+            \end{itemize}
+      \item \textbf{Biztonsági, védelmi instrukciók:}
+            \begin{itemize}
+                  \item A tesztelési környezet biztonságának és integritásának megőrzése
+                  \item Javasolt intézkedések biztonsági incidensek esetén
+            \end{itemize}
+      \item \textbf{Hibaelhárítás, támogatás, gyakran ismételt kérdések:}
+            \begin{itemize}
+                  \item Használat közben előforduló gyakori problémák és megoldásaik
+                  \item Szójegyzék
+                  \item Kapcsolatfelvételi információ
+            \end{itemize}
+\end{enumerate}
+
+\section{Feltételezések és Függőségek}
+
+\subsection{Feltételezések}
+
+\begin{itemize}
+      \item \textbf{Harmadik Fél Komponensek}:
+            A projekt azt feltételezi, hogy elérhetőek és kompatibilisek lesznek a harmadik felek által szállított vagy kereskedelmi komponensek. Bármilyen változás ezekben a komponensekben befolyásolhatja a projekt funkcionalitását és teljesítményét.
+      \item \textbf{Fejlesztési Környezet}:
+            A fejlesztési környezet a stabilitására és támogatására számít. A fejlesztési környezetben bekövetkező váratlan változások vagy korlátok befolyásolhatják a projekt idővonalát és eredményeit.
+      \item \textbf{Üzemeltetési Környezet}:
+            Az eszközök teszteléséhez használt üzemeltetési környezet változatosnak tekinthető, támogatva különböző operációs rendszereket (Windows és Linux). Az üzemeltetési környezetben bekövetkező korlátok vagy inkompatibilitások befolyásolhatják az eszközök használhatóságát.
+      \item \textbf{Korlátok}:
+            A projekt azt feltételezi, hogy nincsenek jelentős jogi vagy szabályozási korlátok, amelyek hátráltathatják a tesztelőkörnyezet fejlesztését és bevezetését. Bármilyen váratlan korlát módosítást igényelhet a projekttervben.
+\end{itemize}
+
+\subsection{Függőségek}
+
+\begin{itemize}
+      \item \textbf{Külső Kommunikáció}:
+            A projekt biztonságos külső kommunikációs környezetre számít a harmadik felekkel vagy szolgáltatásokkal való interakció során. Bármilyen zavar vagy biztonsági probléma a külső kommunikációban befolyásolhatja a tesztelőkörnyezet általános teljesítményét.
+      \item \textbf{Sonarqube Integráció}:
+            A projekt azt feltételezi, hogy sikeres lesz az integráció a Sonarqube kód elemzési eszközzel. Bármilyen nehézség vagy változás ebben az integrációban befolyásolhatja a kódminőség értékelését és a projekt általános sikerét.
+      \item \textbf{Folyamatos Integráció (CI)}:
+            A projekt azon múlik, hogy képes legyen futni egy folyamatos integrációs környezetben. Bármilyen probléma a CI-jal hatással lehet a zavartalan fejlesztési és tesztelési folyamatokra.
+      \item \textbf{Erőforrások Elérhetősége}:
+            A projekt az elérhető erőforrások, beleértve a hardvert, szoftverlicencet és személyzetet, rendelkezésre állására számít. Bármilyen erőforráshiány késleltetheti a projekt mérföldköveit.
+\end{itemize}
+
+\chapter{Külső interfész követelmények}
+
+A projekt kontextusában nincs szükség külön felhasználói felületre a környezet kezelése során. A szoftver fejlesztése és tesztelése olyan környezetben zajlik,
+ahol a felhasználói interakció minimális vagy nem létező. Ennek eredményeként:
+\begin{itemize}
+      \item \textbf{Nem készül külön UI-terv}:
+            A felhasználói felület logikai jellemzőit részletezzük, de nem készül külön felhasználói felületi tervezet, mivel nincs szükség a felhasználói interakcióra a környezet menedzselése során.
+      \item \textbf{Funkciók automatizálása}:
+            Az említett logikai jellemzők és információk alapján a projekt inkább a funkciók automatizálására fókuszál, minimális vagy implicit felhasználói beavatkozás mellett.
+\end{itemize}
+
+\section{Hardware interfészek}
+
+A szoftver tesztelési folyamatai során a kezdő konfiguráció révén kapcsolatot létesít egy zárt tárolóegységgel, amelyet különböző adatok tárolására, futási
+információk rögzítésére, valamint a tesztelt entitás tárolási igényeinek kielégítésére használhat fel.
+
+Ez a kapcsolat a Docker által nyújtott interfészen keresztül valósul meg, amely logikai jellegű, és így nem igényel külön fizikai eszköz csatlakoztatását. Ez
+növeli a biztonságot és a kényelmet/szabadságot.
+
+Ez a tároló logikailag elkülönítettnek kell lennie, hogy ne befolyásolja más logikai egységeket és a fizikai tárolóegységet. Emellett biztosítani kell, hogy a
+itt létrehozott fájlok semmilyen körülmények között ne férjenek hozzá a tesztkörnyezeten kívülre, ezzel fenyegetve a rendszer biztonságát. Mindenképpen
+korlátozott hozzáférést kell biztosítani a környezet számára. Mivel nagy mennyiségű és nagy méretű adatok is szóba kerülhetnek, erősen javasolt a tárolóegység
+lokalitását/hálózati elhelyezkedését meghatározni. Ezzel elkerülhetjük a jelentős külső kommunikációt a hálózat külső interfészein és az ISP-n keresztül. A
+tárolóegységnek semmilyen körülmények között nem szabad szinkronizált vagy titkosított tárolóegységnek lennie.
+
+A tesztkörnyezetnek tilos bármilyen módon hozzáférnie más tárolóegységekhez. Ez a korlátozás szigorúan betartandó annak érdekében, hogy elkerüljük a nem kívánt
+adatinterakciókat és fenntartsuk a teljes biztonságot a különböző tárolók között.
+
+\section{Kommunikációs interfészek}
+A tesztkörnyezetből ki- és befelé irányuló kommunikáció teljes egészében le lesz tiltva, kivéve a 22-es porton keresztül érkező SSH protokollt használó
+keretek. Ez ugyanis a konténer elérhetőségét és állapotának vizsgálatát teszi lehetővé. Az SSH egy titkosított folyosót hoz létre a kliens eszköz a konténer
+példány között. Ehhez szükséges a felhasználói azonosítás egy felhasználó névvel és jelszóval, ami konfigurálva lesz a felhasználók számára.
+
+Mindenképpen szükséges lesz a hálózati szegmentálás, hogy a konténer ne férhessen hozzá a futattó környezet hálózatához. Első sorban az előbb említett tűzfal
+hivatott a védelmet biztosítani, viszont mindenképp szükséges a fizikai és logikai hálózati elszigeteltség VLAN és Trunk port konfigurálásval a futattó fizikai
+eszközhöz legközelebb eső hálózati forgalomirányitó.
+
+A tesztkörnyezet nem igényel további hálózati szolgáltatásokat és alkalmazásokat, mint HTTP/HTTPS, FTP, SMTP, POP vagy IMAP.
+
+\chapter{Egyéb nem funkcionális követelmények}
+
+\section{Teljesítményre vonatkozó követelmények}
+A projekt kontextusában a nem funkcionális követelmények rendkívül fontosak, különösen azok, amelyek a rendszer különböző feltételek melleti működésére
+vonatkoznak.
+
+Az egyik elsődleges szempont a rendszer válaszideje, ami létfontosságú a felhasználói elégedettség és az általános hatékonyság miatt. A rendszernek a
+felhasználói kérésekre egy meghatározott időkereten belül válaszolnia kell, függetlenül a kiadott feladat bonyolultságától és függetlenül attól, hogy mennyien
+használják egyidejűleg a rendszert. Ez robosztus architekturális tervezést igényel.
+
+Egy másik kulcsfontosságú szempont a rendszer áteresztőképessége, azaz, hogy egy adott időszak alatt mennyi tranzakciót vagy műveletet képes kezelni. Ez nagyon
+fontos olyan helyzetekben, amikor egyidőben nagy mennyiségű adatot vagy kérést kell feldolgozni. Ehhez elengedhetetlen a hatékony algoritmusok és
+adatszerkezetek alkalmazása. Továbbá a skálázhatóság is kritikus tényező, mert a rendszerhez való hozzáférést változó terhelésnél is biztosítani kell, anélkül,
+hogy teljesítménybeli kompromisszumokat kötnénk.
+
+\section{Stabilitási biztonsági (safety) követelmények}
+A tesztkörnyezet biztonságát az alábbi kockázatcsökkentő intézkedésekkel biztosítanánk:
+\begin{itemize}
+      \item A jogosultsásgokat a lehető legalacsonyabban tartjuk, a root jogosultságot tiltjuk
+      \item AppArmor profilt használunk
+      \item Mindig a lehető legfrisebb verziójú szoftverekkel dolgoznunk, amiket folyamatosan frissítenénk egy megelöző alapos tesztelést követően
+      \item A tűzfal megfelelően lesz konfigurálva, és a konténer izoláltsága érdekében a kommunikáció ki és be irányba blokkolva lesz, kivéve a 22-es porton keresztül
+            érkező SSH protokollt használó keretek.
+      \item Rendszerek sérülékenységvizsgálata állandó lesz
+      \item Speciális rendszer monitorozó modulok, amikkel nagyobb biztonságot nyújtunk
+      \item Részletes leírás, dokumentáció, mely által a felhasználók magabiztosan használhatják majd a szoftvert
+\end{itemize}
+Biztonsági rés, illetve komolyabb hiba esetén a tesztkörnyezet használata felfüggesztésre kerül, incidens indul.
+
+\section{Adatbiztonsági (security) követelmények}
+A tesztkörnyezet által tesztelt szoftvereket a megrendelő választja ki, és ő kezeli ezeket. A tesztkörnyezetben ezen szoftverek monitorozásából származó logok
+egyedül a megrendelő tulajdona. Ezeket ő kezeli, illetve ő dönt a további kérdésekben. Harmadik fél számára semmi nem továbbítható a megrendelő tudta és
+beleegyezése nélkül.
+
+\section{Szoftverminőségi jellemzők}
+A tesztkörnyezetnek Linux alapú és Windows operációs rendszerekre írt szoftvereket is tudnia kell kezelnie. Megbízhatóság és rendelkezésre állás tekintetében
+nem szükséges a magas prioritás, mivel létfontosságú folyamat nem függ a tesztkörnyezettől. Fontos ugyanakkor, hogy a tesztkörnyezetnek kerülnie kell a `false
+negative` eseteket. A tesztkörnyezet konténer alapú, így könnyen hordozható. Továbbá cél, hogy legyen egy tesztelhető verzió a tesztkörnyezetből az éles verzió
+előtt. A tesztkörnyezetnek kell nagyon felhasználóbarátnak lennie, de legyen egyértelmű a dokumentáció. Egy informatikus könnyedén tudja értelmezni és
+használni. Súlyos következményekkel járó hibákat lehetőség szerint ne tartalmazzon, illetve az elérhető alapértelmezett biztonsági beállítások legyenek
+elérhetőek és bekapcsoltak.
+
+\section{Üzleti szabályok}
+A felhasználók szintjén két jogosultságot különböztetünk meg: \newline\newline \textbf{Adminisztrátorok}: Teljes körű hozzáféréssel rendelkeznek a rendszer
+összes funkciójához és beállításához. Az adminisztrátorok felelősek a rendszer felügyeletéért és karbantartásáért. \newline\newline \textbf{Felhasználók}: Az
+átlagos felhasználók korlátozott hozzáféréssel rendelkeznek a rendszerhez. Ezen felhasználók jogosultságai az általuk végzett feladatok típusától függően
+kerülnek meghatározásra.í
+
+\chapter{Egyéb Követelmények}
+
+\section{Appendix A: Szójegyzék}
+
+\textbf{Tesztkörnyezet}: Az elkészített alkalmazás a tervezett Docker környezeten belül, ami hivatott a vizsgálási környezetet megteremteni.
+\newline\newline
+\textbf{Üzemeltetési környezet}: Az OTP saját belső rendszere, ahol több különböző platform is megtalálható és a támogatottsága biztosított.
+\newline\newline
+\textbf{UI}: User Interface vagy Felhasználói felület.
+\newline\newline
+\textbf{ISP}: Az ISP (Internet Service Provider) egy olyan szolgáltató, amely internet-hozzáférést és kapcsolódó szolgáltatásokat nyújt az ügyfeleknek.
+\newline\newline
+\textbf{False negative}: Egy olyan eredmény vagy állapot, ami negatívat mutat, viszont valójában pozitívat kellene mutatnia.
+\newline\newline
+
+\end{document}
