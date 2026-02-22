@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="hu-HU" xml:lang="hu-HU">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Haladó Java gyakorlati feladatok</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="halado-java-feladatok.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Haladó Java gyakorlati feladatok</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#általános-linkek">Általános linkek</a></li>
+<li><a href="#felsorolási-típus">Felsorolási típus</a></li>
+<li><a href="#tesztelés-junit">Tesztelés (JUnit)</a></li>
+<li><a
+href="#hibakeresés-program-futásának-vizsgálata-debugging">Hibakeresés,
+program futásának vizsgálata (debugging)</a></li>
+<li><a href="#lambda-függvény-névtelen-függvény">Lambda-függvény
+(névtelen függvény)</a></li>
+<li><a href="#folyam-stream">Folyam (stream)</a></li>
+<li><a href="#generikus-típusok">Generikus típusok</a></li>
+<li><a href="#szálkezelés">Szálkezelés</a></li>
+<li><a href="#önelemzés-reflection-annotációk">Önelemzés (reflection),
+annotációk</a></li>
+<li><a href="#fejlett-fájlkezelés">Fejlett fájlkezelés</a></li>
+<li><a href="#reguláris-kifejezések">Reguláris kifejezések</a></li>
+<li><a
+href="#osztálybetöltés-nem-része-a-számonkérésnek">Osztálybetöltés (nem
+része a számonkérésnek)</a></li>
+</ul>
+</nav>
+<h2 id="általános-linkek">Általános linkek</h2>
+<ul>
+<li><a
+href="https://www.cs.utexas.edu/~scottm/cs307/codingSamples.htm">Kezdő
+Java nyelvi példakódok</a></li>
+</ul>
+<h2 id="felsorolási-típus">Felsorolási típus</h2>
+<ol type="1">
+<li>Készítsd el a <code>City</code> felsorolási típust.
+<ul>
+<li>a felsorolási típus elemei legyenek a városok nevei (csupa
+nagybetűvel)</li>
+<li>a típusnak legyen <code>zipCode</code> mezője (irányítószám), egy
+<code>int</code></li>
+<li>lehessen az elemeket egy <code>int</code>-tel paraméterezni, amit
+vegyen át a mezőbe</li>
+<li>lehessen egy másik várossal paraméterezni az elemeket, ekkor az
+aktuális elem irányítószáma a paraméterből jöjjön
+<ul>
+<li>számít-e a sorrend?</li>
+</ul></li>
+<li>készíts saját <code>toString</code> metódust hozzá</li>
+</ul></li>
+<li>Írd ki a <code>City</code> elemeit sorban.</li>
+<li>Készítsd el a <code>WeekDay</code> felsorolási típust.
+<ul>
+<li>Az elemek legyenek a napok nevei rövidítve.</li>
+<li>Készítsd el a <code>nextDay</code> metódust, ami kiadja a következő
+napot.
+<ul>
+<li>Legyen ebből túlterhelt változat, ami kapja meg, hány napot lépjünk
+előre.</li>
+<li>Negatív szám esetén is működjön, értelemszerűen visszafelé
+lépésekkel.</li>
+</ul></li>
+<li>Az elemek paraméterei legyenek a napok teljes nevei különböző
+nyelveken. Tetszőleges sok paramétert kaphasson az elem.
+<ul>
+<li>Egy <code>static</code> mező írja le a támogatott nyelvek szöveges
+kódjait egy tömbben.</li>
+</ul></li>
+<li>Legyen egy <code>get(String lang)</code> metódus, amely adja vissza
+a nap nevét a megadott nyelven, illetve a <code>"?"</code> szöveget, ha
+a nyelv nem ismert, vagy a paraméterezésben nincsen jelen.</li>
+<li>Lehessen úgy is megadni a neveket, hogy azok tetszőleges sorrendben
+legyenek leírhatók az adott naphoz, és ne feltétlenül egy előre
+meghatározott sorrendben kelljen őket megadni. Akár az is lehetséges
+így, hogy két különböző napnak nincs is közös nyelven neve.</li>
+</ul></li>
+<li>Készíts három osztályt: a <code>Posta</code> osztály kezdetben két
+<code>Postafiok</code> példányt kap meg, és <code>Level</code>eket foguk
+elküldeni.
+<ul>
+<li>A <code>Posta</code> osztály <code>valogat</code> metódusa egy
+<code>Level</code> példányt kap meg, és kézbesíti: a páros
+irányítószámúakat az első, a páratlan irányítószámúakat a második
+postafiókba (<code>fogad</code> metódus).</li>
+<li>A <code>Level</code> vagy a címzett irányítószámát kapja meg, vagy a
+várost, ami alapján az irányítószám egyértelműen kiderül.</li>
+<li>A levélen legyen rajta a nap is: a postára feladáskor paraméterként
+kelljen megadni, hogy melyik napon történt a feladás. Amikor a levél a
+következő postaállomásra utazik, lépjen egy napot.</li>
+</ul></li>
+</ol>
+<h2 id="tesztelés-junit">Tesztelés (JUnit)</h2>
+<p>A témakör feladataihoz általában:</p>
+<ul>
+<li>Próbáld ki a JUnit 5 eszközt fejlesztőkörnyezetből, de akár a
+parancssorból is.
+<ul>
+<li>fejlesztőkörnyezetben: a tesztelt kód és a tesztelő kód két külön
+projektbe kerüljön, az utóbbi hivatkozzon az előbbire</li>
+<li>parancssorban: a
+<code>junit-platform-console-standalone-1.8.2.jar</code> használatával
+parancssorból is használható a tesztelő
+<ul>
+<li><a
+href="https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/">innen
+lehet letölteni</a> a legújabb verzió könyvtárából a <code>.jar</code>
+fájlt</li>
+</ul>
+<pre><code>javac -cp .;junit-platform-console-standalone-1.8.2.jar TestMeTest.java
+java -jar junit-platform-console-standalone-1.8.2.jar --class-path .  --scan-classpath</code></pre></li>
+</ul></li>
+<li>A különböző ellenőrzésekhez írj magyarázó szöveget. (Egy szöveges
+utolsó paramétert kell adni a különböző assert-variációknak.)</li>
+<li>Az előző és további részek feladatai többségéhez szintén könnyen
+készíthetők tesztesetek.</li>
+</ul>
+<ol type="1">
+<li>Készítsd el a Fibonacci-függvény rekurzív és iteratív
+implementációját, és teszteld őket néhány konkrét értékre.
+<ul>
+<li>Vedd figyelembe a szélsőséges eseteket is (nulla vagy negatív
+paraméter).</li>
+<li>Teszteld a kétféle Fibonacci implementációt azonos számpárokra.
+<ul>
+<li>Ehhez használj <a
+href="https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests-sources-CsvSource">paraméterezett
+tesztelőt</a>.</li>
+</ul></li>
+</ul></li>
+<li>Teszteld, hogy az a metódus, amelynek törzse egy végtelen ciklust
+tartalmaz, <a
+href="https://junit.org/junit5/docs/current/user-guide/#writing-tests-declarative-timeouts">elszáll</a>
+(nem terminál rögzített, hosszú időtartam alatt).</li>
+<li>Teszteld, hogy ha egy metódusban a nullával való osztás, illetve
+tömb túlindexelése szerepel, akkor <a
+href="https://junit.org/junit5/docs/current/user-guide/#writing-tests-assertions">a
+megfelelő kivételek tényleg kiváltódnak</a>. (Tehát az az elvárt
+működés, hogy a kivétel kiváltódik.)</li>
+<li>Készíts egy <code>Pont</code> osztályt, amelynek adj néhány jellemző
+műveletet, pl. eltolás. Mindegyik teszteset elején vedd fel az adott
+pontot (<a
+href="https://junit.org/junit5/docs/current/user-guide/#writing-tests-test-interfaces-and-default-methods"><code>@BeforeEach</code></a>),
+és teszteld mindegyik műveletet.</li>
+<li>A fent leírt postás feladathoz írj tesztelőt, ami küldjön el néhány
+levelet, és ellenőrizze, hogy a megfelelő helyre érkeznek-e.</li>
+<li>Az egységtesztelésre egy másik lehetőség, ha nem konkrét elvárt
+értékeket adunk meg, hanem valamilyen feltétel teljesülését próbáljuk ki
+sok, véletlenszerűen választott adattal. Erre jellemzően nem a JUnit
+eszközt használjuk.
+<ul>
+<li>Írj olyan (sima Java) kódrészletet, amely megadott számú (pl. 100),
+véletlenül választott <code>n</code> értékre teszteli, hogy a
+Fibonacci-implementációdra fennáll-e a
+<code>fib(n) == f(n-1) + f(n-2)</code> tulajdonság.</li>
+</ul></li>
+<li>Készíts órát és/vagy naptárat reprezentáló osztályt. Legyen olyan
+függvénye, amivel előre/vissza lehet lépni megadott időtartamot.
+Teszteld, hogy az eltolások megfelelően történnek-e meg.
+<ul>
+<li>Ügyelj a speciális esetekre: az óra esetében az éjfél átlépésére, a
+naptár esetében pl. a szökőévekre.</li>
+</ul></li>
+<li>Készíts rendezőfát megvalósító osztályt. Teszteld elemek beszúrását
+és kivételét.</li>
+</ol>
+<p>Néhány további lehetőség a JUnit használatára.</p>
+<ol type="1">
+<li>Készíts egy teljesen egyszerű <code>"Helló világ"</code> programot.
+Teszteld, hogy tényleg azt írja-e ki a program.
+<ul>
+<li>Ez megoldható <a
+href="https://junit.org/junit5/docs/current/user-guide/#running-tests-capturing-output">az
+itt leírt módon</a>.</li>
+<li>Egy másik lehetőség az, ha <a
+href="http://www.linuxtopia.org/online_books/programming_books/thinking_in_java/TIJ314_022.htm">átirányítjuk
+a sztenderd kimenetet</a>.</li>
+<li>Ez nem igazi egységteszt, mert a sztenderd kimenetet is
+használja.</li>
+</ul></li>
+<li>A teszteket (vagy csak néhányat belőlük) fogd össze egy <a
+href="https://junit.org/junit5/docs/current/user-guide/#junit-platform-suite-engine-example"><code>test suite</code>ba</a>.
+<ul>
+<li>Futtatni lehet az egész suite-ot, vagy csak egyes teszteket.</li>
+</ul></li>
+<li>Olyan feladatok, amikhez további könyvtárak szükségesek
+<ol type="1">
+<li><a href="http://mockito.org/">Mockito</a> segítségével alakítsd át a
+Posta tesztelőjét viselkedési tesztelővé, hogy a <code>Posta</code>
+osztályt önmagában, a <code>Postafiok</code> használata nélkül
+tesztelje. Készíts két <code>Postafiok</code> típusú mock-ot és
+ellenőrizd, hogy a megfelelő leveleket kapják meg.
+<ul>
+<li>Kényszerítsd ki, hogy a megfelelő sorrendben hívódjanak meg a
+<code>fogad</code> metódusok, lásd <a
+href="http://stackoverflow.com/questions/21901368/mockito-verify-order-sequence-of-method-calls">InOrder</a>.</li>
+</ul></li>
+<li>Teszteld tulajdonságalapú tesztelővel, pl. <a
+href="https://pholser.github.io/junit-quickcheck/site/1.0/">QuickCheck</a>,
+hogy a Fibonacci-implementációdra fennáll-e a
+<code>fib(n) == f(n-1) + f(n-2)</code> tulajdonság.</li>
+</ol></li>
+</ol>
+<h2 id="hibakeresés-program-futásának-vizsgálata-debugging">Hibakeresés,
+program futásának vizsgálata (debugging)</h2>
+<p>A hibakereséshez a fenti <code>Posta</code> feladatot módosítjuk.
+Most már nem egyetlen <code>Posta</code> példányunk van, hanem
+tetszőlegesen sok állomás. Mindegyik postának van egy szöveges címe
+(tegyük fel, hogy mindegyik különböző), és tetszőlegesen sok postafiókot
+tartalmaz. Az állomások eltárolják, hogy adott című állomásra küldött
+leveleket melyik másik postának kell továbbítani. Ilyen továbbítási
+bejegyzésből is tetszőleges számú lehet mindegyik postán. Ha egy levél
+eléri a célállomását, a fenti feladat szerint kézbesítse az állomás,
+különben pedig dobja el. A levelek jegyezzék meg, hogy melyik
+állomásokon utaztak át.</p>
+<ul>
+<li>Egy fájl írja le a postaállomásokat.</li>
+<li>Egy fájl írja le a levélküldéseket: melyik állomáson adták fel a
+levelet, melyik állomásra megy, melyik postafiókba.</li>
+</ul>
+<p>Az alábbi lépéseket, bár mind meg lehet őket tenni parancssorból is,
+a kényelem kedvéért csak fejlesztőkörnyezetben hajtjuk végre.</p>
+<ol type="1">
+<li>Olvasd be a fájlok tartalmát, és írd ki egy fájlba mindegyik
+levélről, milyen utat járt be.
+<ul>
+<li>Tegyél töréspontot oda, ahol a levél a következő állomásra kerül.
+Futtasd debug üzemmódban a programot.
+<ol type="a">
+<li>Figyeld meg, milyen adatok (változók, adattagok, adatszerkezetek)
+láthatóak.
+<ul>
+<li>A megfelelő nézetben, vagy az egér fölé húzásával láthatóak a
+közvetlenül elérhető adatok.</li>
+<li>Ki lehet értékelni (evaluate/inspect) tetszőleges kifejezést.
+<ul>
+<li>Ha gyakran szükség van rá, ki lehet emelni (display/watch). Legyen
+most ilyen az, hogy az adott helyről tovább lehet-e küldeni a
+levelet.</li>
+</ul></li>
+</ul></li>
+<li>Engedd tovább a vezérlést. Az adatok megváltoznak.</li>
+<li>Léptesd a programot utasításonként.</li>
+<li>A következő állomás meghatározása kerüljön külön metódusba. Állj
+meg, amikor épp rákerül a vezérlés.
+<ol type="i">
+<li>Léptesd át a metódushívást. Az eredménye rögtön látható.</li>
+<li>Léptesd bele a vezérlést a metódusba, és hajtsd azt végre
+lépésenként.
+<ul>
+<li>Miközben benne jársz, nézd meg a külső veremkeretek tartalmát.</li>
+</ul></li>
+<li>Léptesd bele a vezérlést, lépj benne néhányat, majd lépj ki
+belőle.</li>
+<li>Több szintet is visszaléphetsz (drop to frame).</li>
+</ol></li>
+<li>Legyen a töréspontnak feltétele.
+<ul>
+<li>A töréspont pontosan akkor aktiválódjon, amikor a program
+harmadszorra érinti.</li>
+<li>A töréspont pontosan akkor aktiválódjon, amikor egy levelet egy
+előre megadott nevű állomásra kézbesítünk.</li>
+</ul></li>
+<li>Több debug végrehajtás is futhat egyszerre. Próbáld ki: külön
+vezérelhetőek.</li>
+</ol></li>
+</ul></li>
+<li>Keress olyan konfigurációt, amelyre rosszul működik a program.
+<ul>
+<li>Vizsgáld meg a debuggerben a helytelen működést.</li>
+</ul></li>
+<li>Ha a levél nem továbbítható és nem is kézbesíthető, a program
+váltson ki egy kivételt. Ha a levél túl sokáig utazik, egy másik fajta
+kivételt.
+<ul>
+<li>Kapd el úgy, hogy kimondottan az adott fajta kivételre
+figyelsz.</li>
+<li>Kapd el úgy, hogy tetszőleges kivételre figyelsz.</li>
+</ul></li>
+<li>Készíts olyan programot, amely ellenőrzi egy konfigurációról, hogy
+helyes-e (sosem működik rosszul) és teljes-e (mindenhonnan eljuthatnak-e
+a levelek mindenhová).
+<ul>
+<li>A program elkészítése során, ahol szükséges, használd a
+debuggert.</li>
+</ul></li>
+<li>Használd a debuggert szükség szerint a tesztelés során is.</li>
+</ol>
+<h2 id="lambda-függvény-névtelen-függvény">Lambda-függvény (névtelen
+függvény)</h2>
+<p>A legfontosabb könyvtári lambda-interfészek (az első kivételével a <a
+href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/package-summary.html">java.util.function
+csomagból importálhatók</a>):</p>
+<ul>
+<li><strong>Ø → Ø</strong>: <code>Runnable</code></li>
+<li><strong>Ø → T</strong>: <code>Supplier</code>
+<ul>
+<li><strong>Ø → primitív</strong>: <code>PPPSupplier</code>, pl.
+<code>IntSupplier</code></li>
+</ul></li>
+<li><strong>T → Ø</strong>: <code>Consumer</code>
+<ul>
+<li><strong>primitív → Ø</strong>: <code>PPPConsumer</code></li>
+</ul></li>
+<li><strong>T1 → T2</strong>: <code>Function</code></li>
+<li><strong>T → boolean</strong>: <code>Predicate</code></li>
+<li><strong>(T1, T2) → T3</strong>: <code>BiFunction</code></li>
+</ul>
+<p>Készíts lambdákat az alábbi feladatok megoldására.</p>
+<ul>
+<li>A feladat része kitalálni, melyik lambdát célszerű választani.
+<ul>
+<li>A “lambda” mindegyik feladatban rövidítés: valódi névtelen függvény
+mellett névtelen osztály is választható.</li>
+<li>Ahol lehetséges, készítsd el őket rövidebb és hosszabb alakban
+is.</li>
+</ul></li>
+<li>Amelyik lambdának van kimenete, JUnit-tesztelővel próbáld ki, jól
+működik-e.</li>
+<li>Ha már elég sok feladatot megoldottál: azt is próbáld ki, mennyivel
+gyorsabb, ha olyan lambdával dolgozol, amelyik primitív típust kap/állít
+elő.</li>
+</ul>
+<ol type="1">
+<li>Készíts olyan lambdát, ami egymás után többször meghívva a pozitív
+egész számokat adja ki.
+<ul>
+<li>Ennek a lambdának lesz állapota is.
+<ul>
+<li>Készíts olyan megoldást, ahol az állapot a lambdán belül jelenik
+meg, és olyat is, ahol rajta kívül.</li>
+</ul></li>
+<li>Próbáld ki, hogy két teszteset között megmarad-e a lambda állapota.
+(Ugyanonnan számlál-e tovább?)</li>
+<li>Nehezítés: készíts olyan változatot, ami egyetlen lambda használata
+helyett úgy működik, hogy mindig új lambda-példányt lehet vele
+előállítani, és azt használjuk.
+<ul>
+<li>Ehhez a lambdának egy lambdát kell visszaadnia.</li>
+<li>Mivel most minden tesztesetben új lambdát veszünk elő, ha azok saját
+állapotot használnak (nem közös állapotot), akkor a tesztesetek elején
+“újraindul” a számlálás. Ez azért jó, mert a tesztesetek egymástól
+függetlenül működnek.</li>
+</ul></li>
+</ul></li>
+<li>Készíts olyan lambdát, ami többször kiírja a beérkező egész
+számokat.
+<ol type="a">
+<li>A szám annyiszor íródjon ki, amennyi az értéke. (Feltehető, hogy
+nemnegatív a szám.)</li>
+<li>A kiírás darabszámát véletlen generátor adja.</li>
+<li>Az első hívásra egy, a másodikra kettő stb. legyen a kiírások
+darabszáma.</li>
+</ol></li>
+<li>Készíts faktoriális lambdát.
+<ul>
+<li>Az egyszerűbb változat iteratív megoldást ad.</li>
+<li>Nehezítés: lehet-e rekurzívan megírni?</li>
+</ul></li>
+<li>Készíts Fibonacci lambdát, iteratív és/vagy rekurzív megoldással.
+<ul>
+<li>Az iteratív megoldást a legegyszerűbb elkészíteni.</li>
+</ul></li>
+<li>Készíts olyan lambdát, ami két
+<code>Map&lt;String, Integer&gt;</code> paramétert kap, és ilyet is
+állít elő. Az eredményben az adott szöveghez hozzárendelt érték az
+eredetiek összege legyen.</li>
+<li>Készíts olyan lambdát, ami megadja egy pozitív számról, hogy
+prím-e.</li>
+<li>Készíts olyan lambdát, ami a prímszámokat állítja elő sorban. (Ennek
+a lambdának lesz állapota is.)</li>
+<li>Készíts olyan lambdát, ami a sík (egész koordinátájú) pontjait
+állítja elő (valamilyen stratégia szerinti sorrendben).</li>
+<li>Készíts olyan lambdát, ami egy <code>Supplier</code>-t kap meg, és
+egy <code>Supplier</code>-t ad eredményül. A kiadott
+<code>Supplier</code> először a megkapott <code>Supplier</code> első
+elemét, aztán annak az első két elemét, aztán az első három elemét stb.
+adja ki. Példa: ha a megkapott <code>Supplier</code> az <code>a</code>,
+<code>b</code>, <code>c</code>, … szövegeket állítja elő, akkor a
+kiadott <code>Supplier</code> az <code>a</code>, <code>a</code>,
+<code>b</code>, <code>a</code>, <code>b</code>, <code>c</code>, …
+értékeket állítsa elő.</li>
+<li>Készíts olyan lambdát, ami paraméterként egy
+<code>BiFunction</code>-t kap, és olyan <code>BiFunction</code> az
+eredménye, ami az eredetivel megegyező működésű, de fordítva vannak a
+paraméterei.
+<ul>
+<li>A bemenő <code>BiFunction</code> paramétereit lehet rögzíteni, pl.
+az eredeti <code>String</code> és <code>Integer</code> paramétereket
+vár, és <code>List&lt;Integer&gt;</code> eredménnyel tér vissza.</li>
+<li>Ha a lambda nem önállóan szerepel, hanem egy metódus visszatérési
+értékeként, akkor meg lehet írni általános típusparaméterekkel is.</li>
+</ul></li>
+<li>Készíts olyan lambdát, ami két <code>IntUnaryOperator</code>
+(matematikai értelemben vett) kompozícióját képzi. Azaz, a paraméterei
+két <code>IntUnaryOperator</code>, és ilyennel is tér vissza: a két
+paraméter kompozíciójával.</li>
+<li>Készíts olyan lambdát, ami két függvényt kap (ezek
+<code>Integer</code> értéket állítanak elő), és olyan predikátumot ad
+ki, ami akkor ad igaz értéket, ha a predikátum paraméterére az első
+függvényt alkalmazva nagyobb szám adódik, mint a második paramétert
+alkalmazva. A predikátum és a függvények bemenő paramétere legyen
+valamilyen rögzített típus, pl. <code>String</code>.</li>
+<li>Az <code>Arrays.sort</code> művelet második paraméterként kaphat egy
+lambdát, ami az összehasonlító rendezés feltételét írja le. Rendezd a
+parancssori paramétereket…
+<ul>
+<li>a hosszuk szerinti sorrendbe</li>
+<li>a számokat elöl (számérték szerint), utána a nem-szám szövegeket
+(ábécésorrendben)</li>
+</ul></li>
+</ol>
+<h2 id="folyam-stream">Folyam (stream)</h2>
+<p>A <a
+href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/stream/Stream.html"><code>Stream</code></a>
+osztály segítségével sokszor tömör megoldások adhatók. A legtöbbjük
+lambdákat használ.</p>
+<p>Három fázis: a folyam elkészül, dolgozunk vele, majd
+felhasználjuk.</p>
+<ol type="1">
+<li>Elkészítés.
+<ul>
+<li>Más adatokból: tömb (<code>Stream.of</code>,
+<code>Arrays.stream</code>), lista (<code>myList.stream()</code>), <a
+href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/nio/file/Files.html">fájl
+sorai</a>
+<ul>
+<li>Ha az adatok sorrendje nem számít, a folyam elemeit lehet
+párhuzamosan is kezelni: <code>parallel()</code>.</li>
+<li>A folyamok “egyszer használatosak”, szemben az
+adatszerkezetekkel.</li>
+</ul></li>
+<li><code>Supplier</code> segítségével: <code>generate</code>
+<ul>
+<li>speciálisabban: <code>iterate</code>,
+<code>IntStream.range</code></li>
+</ul></li>
+<li>A primitív típusú elemekből álló folyamok típusa más, pl.
+<code>IntStream</code>, és a kapcsolódó lambdák műveleteinek neve
+általában <code>...AsInt</code></li>
+</ul></li>
+<li>Átalakítás: <code>map</code>, <code>mapTo...</code>,
+<code>filter</code>, <code>limit</code>, <code>skip</code>,
+<code>sorted</code>, <code>takeWhile</code></li>
+<li>Felhasználás: a <a
+href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/stream/Collectors.html"><code>Collectors</code></a>
+műveletei segítségével. Ezeket a műveleteket (a JUnit
+<code>assert</code>-jeihez és a Mockito műveleteihez hasonlóan) gyakran
+<code>import static</code> importáljuk.
+<ul>
+<li>elemenként felhasználva: <code>forEach</code></li>
+<li>adatszerkezetté alakítva: <code>to...</code>: tömb, lista,
+<code>Map</code></li>
+<li>egy értékké alakítva
+<ul>
+<li>a folyam egy eleme: <code>min</code>, <code>max</code>,
+<code>find...</code></li>
+<li>szöveggé összefűzve: <code>joining</code></li>
+<li>számmá alakítva: <code>count</code></li>
+<li>logikai: <code>anyMatch</code>, <code>allMatch</code>,
+<code>noneMatch</code></li>
+</ul></li>
+<li><code>Map</code>-be csoportosítva: <code>...By</code></li>
+<li>általánosan: <a
+href="https://docs.oracle.com/javase/tutorial/collections/streams/reduction.html"><code>reduce</code>,
+<code>collect</code></a></li>
+</ul></li>
+</ol>
+<p>A műveletek, ha nem biztos, hogy van eredményük (pl.
+<code>find</code>), <a
+href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/Optional.html"><code>Optional&lt;T&gt;</code>-t</a>
+adnak vissza. Ez kevésbé veszélyes, mint ha <code>null</code> lenne
+ilyen esetekben az eredmény.</p>
+<p>Az alábbi feladatok megoldása során, ahol csak lehet, használj
+folyamokat és lambdákat.</p>
+<ol type="1">
+<li>Olvass be egy fájlt soronként folyam segítségével, majd…
+<ul>
+<li>… írd ki a sorokat a sztenderd kimenetre.</li>
+<li>… mindegyik sorához fűzz hozzá egy rögzített szöveget (ezt innentől
+végig tedd meg), és írd ki a sorokat a sztenderd kimenetre.</li>
+<li>… az eredményt egy másik fájlba írd ki (innentől végig).</li>
+<li>… csak azokat a sorokat, amelyek hosszabbak 5 karakternél</li>
+<li>… az első 3 sor kivételével</li>
+<li>… az első 10 sor adatait feldolgozva</li>
+<li>… legfeljebb 10 kimeneti sort készítve</li>
+<li>… ábécésorrendben</li>
+<li>… aszerinti sorrendben, hány különböző betűt tartalmaznak</li>
+<li>… a palindrom szavakat úgy, ahogy vannak, a többieket
+“palindromosítva”: <code>"abcd"</code>-ből legyen
+<code>"abcddcba"</code></li>
+</ul></li>
+<li>Készíts lambdát, amely egy <code>Scanner</code>-t használ fel, és
+olyan folyamot készít, amely a <code>Scanner</code>-ből kiolvasott
+szavakat adja vissza, illetve, miután elfogytak, <code>null</code>-t.
+<ul>
+<li>Alkalmazz szűrőt a folyamra: ne adjon ki <code>null</code>-t.</li>
+</ul></li>
+<li>Egy fájlban mindegyik sor egy pont két Descartes-koordinátáját
+tartalmazza.
+<ul>
+<li>Add meg, melyik pont van legközelebb/legtávolabb az origótól.</li>
+<li>Add meg a legelső olyan pontot, amelynek mindkét koordinátája
+prímszám. A prímvizsgálatot is folyam/lambdák segítségével végezd.
+<ul>
+<li>Összesen hány ilyen pont van?</li>
+<li>Van-e ilyen pont?</li>
+<li>Mindegyik pont ilyen-e?</li>
+</ul></li>
+</ul></li>
+<li>Készíts folyamot a nemnegatív számokból:
+<code>0..Integer.MAX_VALUE</code>. Add őket össze.
+<ul>
+<li>Készíts különböző változatokat: különböző műveletekkel létrehozva a
+folyamot, primitív/referencia elemekből.</li>
+<li>Mi történik <code>parallel()</code> hatására?</li>
+</ul></li>
+<li>Azokba a postafiókokba, amelyek üresek, tegyél be (közvetlenül) egy
+levelet.</li>
+<li>Csoportosítsd a(z összes posta összes postafiókjába) beérkezett
+leveleket aszerint, hogy melyik nap érkeztek meg.</li>
+</ol>
+<h2 id="generikus-típusok">Generikus típusok</h2>
+<p><a
+href="https://kitlei.web.elte.hu/segedanyagok/foliak/java/hu-java-bsc/03generic.pdf">Az
+előadásanyag a sablonokról.</a> <a
+href="http://stackoverflow.com/a/4343547">Hasznos anyag a
+típusparaméterek megszorításairól.</a></p>
+<ol type="1">
+<li>Készítsünk egy <code>BiMap</code> adatszerkezetet, ami kulcs és
+érték szerint is rendezve tárol kulcs-érték párokat. Két típusparamétere
+van, a kulcsok típusa és az értékek típusa. Implementációját
+megvalósíthatjuk két <code>TreeMap</code>-pel.
+<ol type="1">
+<li>Legyen egy osztályszintű <code>create</code> metódus, ami akkor
+használható, ha a létrehozott <code>BiMap</code> mindkét paramétere
+<code>Comparable</code>. A létrehozott <code>BiMap</code> az
+alapértelmezett összehasonlítást fogja használni.</li>
+<li>Készítsünk egy másik osztályszintű <code>create</code> metódust, ami
+két <code>Comparator</code> objektumot kap, egyet a kulcsokra, egyet az
+értékekre. A létrehozott <code>BiMap</code> ezekkel végezze el az
+összehasonlítást.
+<ul>
+<li>Az osztályból példányt csak a két <code>create</code> közül
+valamelyik használatával lehessen készíteni, máshogy ne.</li>
+</ul></li>
+<li>Készítsünk “kulcs-érték-pár beszúrás”, “érték keresése kulcs
+alapján”, “kulcs keresése érték alapján” metódusokat.</li>
+<li>Készítsünk egy metódust, ami két listát kap, az egyik paramétere a
+kulcstípus vagy annak egy altípusa, a másiké az értéktípus vagy annak
+egy altípusa. Ha a két lista egyező hosszú, akkor végigmegy rajtuk, és
+berakja őket a <code>BiMap</code>-be.</li>
+<li>Teszteljük a programot: adjunk meg olyan tesztesetet, amikor egy
+altípus listáját akarjuk beszúrni a <code>BiMap</code>-be.</li>
+</ol></li>
+<li>Készítsünk <a
+href="https://hu.wikipedia.org/wiki/Genetikus_algoritmus">genetikus
+algoritmust</a> alkalmazó metódust, amely a következőképpen működik. A
+kiemelten szedett nevek a metódus paraméterei lesznek; az egyedek típusa
+típusparaméter.
+<ol type="1">
+<li>Először <code>populationCount</code> darab egyedet készít a
+<code>createRandomEntity()</code> többszöri meghívásával.</li>
+<li>Ezután két (véletlenszerűen kiválasztott) egyedre meghívja a
+<code>doCrossover(Entity e1, Entity e2)</code> metódust. Ezt
+<code>crossoverCount</code> alkalommal ismétli.</li>
+<li>Ezután minden egyedet megváltoztat <code>mutationProbability</code>
+valószínűséggel, a <code>mutateEntity(Entity e)</code> metódus
+segítségével. (Általában a <code>mutationProbability</code> értéke
+viszonylag alacsony, pl. 0.1%.)</li>
+<li>A létrejött egyedeknek kiszámolja a fitneszértékét:
+<code>calculateFitness(Entity e)</code>. Ezek közül a legjobb
+<code>pruneCount</code> darab egyedet tartja meg, a többi helyére új
+egyedeket generál a <code>createRandomEntity()</code> segítségével.</li>
+<li>A fenti lépések egy új generációt állítanak elő. Összesen
+<code>generationCount</code> darab generációváltást tesz meg, majd a
+populáció legnagyobb fitneszű egyedével tér vissza.</li>
+</ol></li>
+<li>Keressünk közelítő megoldást a <a
+href="http://info.berzsenyi.hu/programozas/feladatok/hatizsak-problema">hátizsák-problémára</a>
+genetikus algoritmus segítségével.</li>
+</ol>
+<h2 id="szálkezelés">Szálkezelés</h2>
+<ol type="1">
+<li>Készíts olyan metódust, amely egyszámjátékot játszik az alábbiak
+szerint.
+<ul>
+<li>A játékhoz tartozik egy vezérlő, ami egy szálon fut, valamint néhány
+játékos.</li>
+<li>A vezérlőnek van egy metódusa, amely egy számot fogad. A fogadott
+számokat eltárolja.</li>
+<li>A játékosok számokat generálnak (pl. 0 és 1000000 között), és
+beküldik azokat a vezérlőnek.</li>
+<li>A vezérlő másodpercenként kiírja, melyik a legkisebb szám, amit csak
+egyvalaki küldött be, valamint a beküldő játékos sorszámát.</li>
+</ul>
+<ol type="a">
+<li>Szinkronizáció nélkül kivétel váltódik ki.
+<ul>
+<li>Az egyik megoldás erre természetesen a szinkronizáció…</li>
+<li>… illetve a <a
+href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/concurrent/package-summary.html">java.util.concurrent</a>
+csomag <a
+href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/concurrent/ConcurrentMap.html">ConcurrentMap</a>-je
+is használható.</li>
+</ul></li>
+</ol></li>
+<li>Készíts olyan <code>applyAssoc</code> metódust, amely egy
+<code>T→T</code> lambdát és <code>T</code> típusú értékek egy tömbjét
+kapja meg. Feltételezve, hogy a lambda asszociatív függvényt ír le,
+számítsd ki, milyen eredményt ad az értékekre alkalmazva (pl.
+<code>[1,2,3,4]</code> a <code>(n,m) -&gt; n + m</code> lambdával a
+<code>10</code> értéket adja). Feltételezzük, hogy van legalább egy elem
+a tömbben.
+<ul>
+<li>Mindig felezd meg a tömböt (kivéve, ha már egyetlen elemnél jársz),
+és az alsó felére és a felső felére külön szál számítsa ki az eredményt,
+az <code>applyAssoc</code> rekurzív meghívásával.</li>
+<li>Oldd meg a feladatot a <a
+href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/concurrent/RecursiveTask.html"><code>RecursiveTask&lt;T&gt;</code></a>
+és <a
+href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/concurrent/ForkJoinPool.html"><code>ForkJoinPool</code></a>
+segítségével is. Készítsd el a <code>RecursiveTask&lt;T&gt;</code>
+leszármazottját, <code>AssocTask&lt;T&gt;</code>-t, ez lesz
+<code>applyAssoc</code> megfelelője. Ennek a <code>compute()</code>
+metódusát kell hasonlóan megírni az <code>applyAssoc</code>-hoz: el kell
+készíteni két <code>AssocTask&lt;T&gt;</code> példányt, majd meghívni
+rájuk a <code>fork()</code> és a <code>join()</code> metódusokat.</li>
+</ul></li>
+<li>Adott <code>n</code>-re készíts az
+<code>Executors.newFixedThreadPool(n)</code> hívás segítségével egy
+eszközt, amely egyszerre legfeljebb <code>n</code> tevékenységet hajt
+végre <code>n</code> szálon.
+<ul>
+<li><code>n</code>-re gyakran jó választás
+<code>Runtime.getRuntime().availableProcessors()</code>, mivel a
+processzor ennél több feladatot úgysem tud párhuzamosan
+végrehajtani.</li>
+<li>A pool <code>execute()</code> metódusának át lehet adni egy lambdát,
+amelyet végrehajt (ha van szabad szál, rögtön, különben sorba áll).</li>
+<li>Ha lambda eredményt is állít elő, a <code>submit()</code> metódust
+kell használni. Az eredményt a <code>submit()</code> visszatérési
+értékeként kapott <code>Future</code>-ön a <code>get()</code> metódus
+meghívásával lehet megkapni.</li>
+</ul>
+<ol type="a">
+<li>Adj át sok tevékenységet a pool-nak, mindegyik várjon véletlenszerű
+ideig. A <code>Future</code>-jeik segítségével írd ki másodpercenként,
+hogy melyik van készen.</li>
+<li>Készíts saját pool implementációt szálak segítségével.
+<ul>
+<li>Az <code>n</code> szál mellett szükség lesz egy vezérlőre, ami
+kiosztja a feladatokat, és a szálak ennek jelzik, ha
+felszabadultak.</li>
+</ul></li>
+</ol></li>
+</ol>
+<h2 id="önelemzés-reflection-annotációk">Önelemzés (reflection),
+annotációk</h2>
+<ol type="1">
+<li>Készíts metódust, amely ellenőrzi, hogy a paraméterben kapott
+osztály mindegyik adattagja <code>private</code> láthatóságú-e.</li>
+<li>Készíts <code>@Author</code> annotációt típusokhoz, amely a típus
+készítőjének nevét írja le.
+<ol type="a">
+<li>Készíts metódust, amely megkapja a típus nevét szövegesen, és kiírja
+a készítő nevét (ha az annotáció szerepel a típuson).</li>
+<li>Az annotáció legyen alkalmazható metódusokra is.
+<ol type="a">
+<li>Készíts metódust, amely megkapja a típus nevét szövegesen, és kiírja
+a típus azon metódusainak nevét, amelyeknek más a készítője, mint a
+típusé.</li>
+</ol></li>
+<li>Az annotáció legyen többszörözhető (<code>@Repeatable</code>).
+<ol type="a">
+<li>A fenti metódusok működjenek akkor is, ha egy szerző szerepel, és
+akkor is, ha több.</li>
+</ol></li>
+</ol></li>
+<li>Készíts <code>@Date</code> annotációt, amelyet metódusok kaphatnak
+meg.
+<ol type="a">
+<li>Készíts metódust, amely paraméterként kapott nevű osztály metódusai
+közül megkeresi azokat, amelyek rendelkeznek az annotációval, és
+paraméter nélküliek. Ezek közül hívd meg azokat, amelyek egy
+(paraméterben kapott) dátumnál nem régebbiek.</li>
+</ol></li>
+<li>Készíts <code>@ParameterFor</code> annotációt, amely metódusra
+alkalmazható. A metódus valamilyen értékek tömbjét adja vissza. Az
+annotáció kap egy szöveget, ami ugyanabban az osztályban egy metódus
+neve; ez a metódus olyan típusú paramétert vár, mint amilyen értékek a
+másik metódus visszatérési értékének tömbjében szerepelnek. Az annotáció
+legyen többszörözhető.
+<ol type="a">
+<li>Készíts metódust, amely paraméterként kapott nevű osztály metódusai
+közül megkeresi azokat, amelyek rendelkeznek az annotációval. Az
+annotációban szereplő nevű metódust hívd meg sorban azokkal a
+paraméterekkel, amelyeket az annotált metódus visszatérési értékének
+tömbjében szerepelnek.</li>
+</ol></li>
+</ol>
+<h2 id="fejlett-fájlkezelés">Fejlett fájlkezelés</h2>
+<p>A <a
+href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/nio/package-summary.html"><code>java.nio</code></a>
+(“New I/O”) csomagban sok érdekes eszköz található meg.</p>
+<ol type="1">
+<li>Az első parancssori paraméter egy fájlnév, ezután pozíciók
+(<code>long</code>) és értékek (<code>byte</code>) párjai jönnek.
+Ellenőrizd, hogy a fájl megadott pozíciói a megadott értékeket
+tartalmazzák-e.</li>
+<li>A zip fájlok szerkezete ismert (pl. <a
+href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT">ennek
+a leírásnak a 4.3.7. fejezete tartalmazza</a>). Tömöríts be tetszőleges
+fájlokat, majd az előállt zip fájlt megvizsgálva írd ki az alábbiakat.
+Tipp: a <code>ByteBuffer</code> alapértelmezés szerint MSB bájtsorrendet
+használ, mint a Java általában; a zipből való megfelelő olvasáshoz meg
+kell hívni rá a <code>.order(ByteOrder.LITTLE_ENDIAN)</code> műveletet.
+<ul>
+<li>a betömörített fájlok
+<ul>
+<li>neve</li>
+<li>mérete</li>
+<li>az alkalmazott tömörítési módszer (ha 0, egyszerűen tárolva van a
+fájl tartalma)</li>
+</ul></li>
+<li>a betömörített fájlokat mentsd is el, ha szimplán tárolva vannak (a
+bájtsorrendet ekkor nem kell megforgatni)</li>
+</ul></li>
+<li><a
+href="https://docs.oracle.com/javase/tutorial/essential/io/notification.html">Figyeld
+meg</a> egy megadott nevű könyvtár fájljainak megváltozásait: minden
+változáskor jegyezd fel a fájl új tartalmát. A felhasználó a sztenderd
+bemeneten küldhesse el egy fájl nevét és egy verziószámot; a program
+írja vissza a fájlba a kiválasztott korábbi tartalmat.</li>
+<li>Japán ismerősöd <a href="megfejtendo_uzenet.txt">küldött egy
+egysoros üzenetet</a>. Csak annyi ismert az üzenetről, hogy szerepel
+benne a <code>大</code> karakter. Találd ki, milyen kódolást
+használhatott, és mi az üzenet tartalma.</li>
+</ol>
+<h2 id="reguláris-kifejezések">Reguláris kifejezések</h2>
+<ol type="1">
+<li>Tüntesd el egy szövegből a bezárójelezett részeket. Feltehető, hogy
+a zárójelek nem tartalmaznak zárójeleket.</li>
+<li>Készíts morzekódra és -ról konvertáló programot. <a
+href="morzetablazat.txt">Kódtáblázat itt érhető el</a>.</li>
+<li>Adott néhány karakter és két fájl. Add meg azoknak a soroknak a
+sorszámát a két fájlból, amelyek azonosak; annyi eltérés engedhető meg,
+hogy a megadott karakterek esetén nem számít, kis- vagy
+nagybetűsek-e.</li>
+</ol>
+<h2 id="osztálybetöltés-nem-része-a-számonkérésnek">Osztálybetöltés (nem
+része a számonkérésnek)</h2>
+<ol type="1">
+<li>Készíts olyan programot, amelyik egy osztály több különböző
+változatát képes betölteni (természetesen különböző
+osztálybetöltő-példányok segítségével; az osztálybetöltéshez használt
+interfész ne változzon). Lehessen példányt készíteni bármelyik betöltött
+változatból.
+<ul>
+<li>Kipróbálni egyszerű osztályokkal érdemes, pl. a faktoriális
+különböző változataival.</li>
+</ul></li>
+<li>Készíts olyan programot, amelyik egy könyvtár változásait figyeli,
+és ha abban megjelenik egy új <code>.class</code> fájl, akkor betölti
+belőle az osztályt, és készít belőle egy példányt. A program a sztenderd
+bemenetről sorokat olvas be; minden beolvasott sorral meghívja mindegyik
+betöltött példány <code>processLine</code> metódusát.
+<ul>
+<li>Az osztályok <code>processLine</code> metódusai legyenek egyszerűek,
+pl. írják ki a szót visszafelé vagy megkettőzve.</li>
+</ul></li>
+<li>Készíts minimális alkalmazásszervert, amely egy
+<code>Socket</code>-en keresztül várja a bejövő kapcsolatokat. A szerver
+legyen képes alkalmazásokat (osztályokat) betölteni. Amikor egy böngésző
+kapcsolódik, elküldi a szerverünknek az első sorban a kérés típusát
+(általában <code>GET</code> vagy <code>POST</code>) és a lekért URL-t. A
+szerver hívja meg a betöltött alkalmazások <code>acceptsURL</code>
+metódusát az URL-lel; az első alkalmazás, amelyik igaz értéket ad
+vissza, fogja kezelni a kérést. Hívd meg az alkalmazás
+<code>doGet</code> vagy <code>doPost</code> metódusát a kérés típusától
+függően; ez előállítja a kiszolgálandó tartalmat, amelyet a megfelelő
+fejléccel együtt küldj vissza a böngészőnek. Ha egyik alkalmazás sem
+kezeli a kérést, akkor küldj vissza egy elutasító választ.</li>
+<li>Próbáld ki az <code>URLClassLoader</code> osztályt. Ennek
+segítségével pl. fájlokból és a netről kényelmesen be lehet tölteni
+osztályokat.</li>
+</ol>
+</body>
+</html>
