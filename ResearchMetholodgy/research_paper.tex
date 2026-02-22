@@ -1,0 +1,208 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{draftwatermark}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{biblatex}
+\usepackage{csquotes}
+
+\addbibresource{refs.bib}
+
+\SetWatermarkText{Fictional}
+\SetWatermarkFontSize{4cm}
+\SetWatermarkScale{4.4}
+\sloppy
+
+\title{Automatic correction of the location of web elements in automated test cases with the help of the FTPK tool}
+\author{test-automation group}
+\date{April 2023}
+
+\begin{document}
+
+\maketitle
+
+\section{Abstract}
+
+Automated testing has become an essential part of software development, helping to ensure the quality and reliability of software products. However, maintaining automated test cases can be a time-consuming and error-prone process. In this research, we present a new tool that helps to correct automated test cases by combining the strengths of two existing tools, Similo and DAA.
+
+Similo is a tool that improves locator robustness by collecting locator parameters from all visible web elements, using neighboring web element information, and allowing all locator parameters to be compared, weighted, and tallied into a combined similarity score for each web element. It enables using a threshold value to filter how similar candidate web elements have to be considered a match, which is not provided by other approaches. On the other hand, DAA uses Fuzzy Inference System with Fuzzy logic to improve the determination of the web cases and create correct decisions. By using Fuzzy logic, DAA is able to create a more realistic and quality test validation process. However, FIS could cause undeterministic results.
+
+By merging these two tools, we aim to bring together their advantages and provide a more effective solution for correcting automated test cases. Our experimental results show that the performance of our new tool increased by 120\% in most cases, and the classification of the found failures increased up to 200\% with the FIS solution, while the accuracy of the classification increased to 160\% with the Similo against the original DAA.
+
+In conclusion, our new tool provides a promising solution for correcting automated test cases, which can help to reduce the time and effort required for maintaining these cases.
+
+\maketitle
+
+\section{Introduction}
+
+Software testing is an essential phase in the software development life cycle (SDLC). It helps to ensure that the software product meets the specified requirements and functions as expected. Test automation has gained considerable attention due to its potential to reduce the testing time and improve the quality of the software product. However, maintaining test scripts can be challenging, especially when the program changes\cite{gui_testing, gui_test_costs}. Existing tools can have costly runtime, and they can be inaccurate, and may not have the ability to handle the problem of test oracle\cite{test_oracle_ai}. Therefore, there is a need for a new approach to test automation that can address these issues.
+
+Manual testing has been the traditional method of testing software applications. However, with the increasing complexity of software applications, manual testing has become time-consuming, expensive, and prone to human error\cite{gui_test_costs}. Automation testing has emerged as a viable alternative to manual testing, providing developers with the ability to execute tests automatically, quickly, and with minimal human intervention.
+
+Automation testing is crucial in ensuring that software applications meet the desired quality standards. Automation testing provides several advantages over manual testing, including faster test execution, increased test coverage, and better accuracy. However, automation testing also has its disadvantages, including the need for technical expertise, higher initial costs, and the risk of false positives and false negatives.
+
+There are several types of automation testing, including functional testing, regression testing, load testing, and performance testing. Each type of automation testing has its specific use case, and developers can choose the appropriate type of automation testing based on the application's requirements.
+
+In conclusion, automation testing has become an essential aspect of modern software development. Its advantages in terms of speed, accuracy, and test coverage make it a compelling alternative to manual testing. The various types of automation testing and its connection to DevOps further highlight the importance of automation testing in software development. This research paper aims to provide an in-depth analysis of automation testing and its significance in the software development life cycle.
+
+In this research paper, we propose a new approach for test automation at GUI testing. We relocalize the changed web element to make the testing phrase more robust. We mainly focused on web elements, but this approach can be used also on other GUI structures, such as Android apps, or Windows desktop applications. The main idea is to relocalize web elements by their properties and  before that we tell if the change in the code was the desired, correct behaviour or not. 
+In other words, our research aims to address this challenge by introducing a new web element localization method that is capable of finding major differences between code states and providing solutions to adjust automated test cases accordingly.
+
+The proposed web element localization method is designed to identify web elements based on their unique attributes, such as ID, class, name, or XPath, across different code states. By comparing these attributes, the method is able to detect major changes in the web page's structure and provide solutions to adjust automated test cases. These solutions may include modifying test scripts or updating web element locators to ensure that the automated test cases continue to function as expected.
+
+This approach can help to stop rerunning our webelement relocalization algorithm, which produces an optimized solution. It can improve the accuracy and reliability of automated test cases by ensuring that they continue to function as expected.
+
+By providing solutions to adjust automated test cases, our proposed method can help organizations to achieve faster software delivery cycles while maintaining high levels of quality and reliability. We named our tool FTPK after the researchers.
+
+The following questions will guide our research:
+
+\begin{itemize}
+\item How can we relocalize webelements by their properties?
+\item How many times should the approach search for the changed web element?
+\item Can this approach help to reduce the cost of test automation?
+\item Can this approach improve the accuracy of test results?
+\item Can this approach solve the test oracle problem?
+\item Is this approach better, than Similo, or Dalia Alamleh's approach alone?
+\end{itemize}
+
+In the next sections of this research paper, we will describe our tool in detail, present the results of our experiments, and discuss the implications of our findings.
+
+\maketitle
+
+\section{Related work}
+
+Related work in this area includes WATER\cite{water}, WATERFALL\cite{waterfall}, COLOR\cite{color}, Erratum\cite{erratum} ROBULA\cite{robula}, ATA, ATA-QW\cite{ata}, SIDEREAL\cite{sidereal}, Leotta's Multi-Locator (LML)\cite{lml}, Similo\cite{similo}, Fuzzy-DEMATEL, Neuro-Fuzzy Logic (NFL), Dalia Alamleh's approach (DAA)\cite{fuzzy_ai_in_web_testing} and AI in test automation\cite{ai_in_test_auto}. These approaches have various strengths and weaknesses, and they focus on different aspects of test automation.
+
+The WATER approach by Choudhary\cite{water} is a tool-based approach that uses differential testing to repair test scripts. WATERFALL\cite{waterfall}, an improvement of WATER\cite{water}, takes into account intermediate minor versions to improve its effectiveness. COLOR, a recent tool proposed by Kirinuki\cite{color}, considers various properties to propose a repair and outperforms WATER\cite{water} in complex changes. Erratum by Brisset\cite{erratum} utilizes a DOM tree matching algorithm to repair broken locators with a 67\% better accuracy than WATER\cite{water}. These approaches offer new solutions to the challenges of maintaining and repairing test scripts in software development, enhancing the reliability and efficiency of test automation.
+
+The literature has proposed several novel approaches to generate robust locators for web testing\cite{robust_locators, robula+}. Montoto\cite{montoto} developed an algorithm that generates XPath expressions iteratively, starting from a simple expression and extending it until the target element is identified. Leotta proposed two algorithms, ROBULA\cite{robula} and ROBULA+\cite{robula+}, with the latter being considered the state-of-the-art algorithm. It generates locators iteratively, starting from a generic XPath locator and refining it using a set of transformations according to specialisation steps, prioritisation, and blacklisting techniques. Another approach is to consider not only the attributes of the target web element but also its neighboring web elements, as proposed by Yandrapally\cite{yandrapally}. Their suggested enhancement, called ATA-QV\cite{ata}, aims to improve the robustness of locating web elements compared to using absolute XPath's by relying more on labels (i.e., visual landmarks) and less on page structure. ATA\cite{ata}, a commercial tool developed at IBM, associates web elements with neighboring labels to pursue the robustness of locators.
+
+Similo approach by Michel Nass\cite{similo} combines several technical solutions to improve locator robustness by collecting locator parameters from all visible web elements, using neighboring web element information, and allowing all locator parameters to be compared, weighted, and tallied into a combined similarity score for each web element. It enables using a threshold value to filter how similar candidate web elements have to be considered a match, which is not provided by other approaches.
+
+Recently, AI-based locator generation algorithms have been proposed by commercial tools and academic papers\cite{ai_in_testing}, such as SIDEREAL\cite{sidereal} and the algorithm proposed by Nguyen\cite{nguyen}. Several researchers have explored the use of fuzzy logic and artificial intelligence in software testing to improve the accuracy and efficiency of testing processes.
+
+In the research of "Testing web-based applications: the state of the art and future trends"\cite{state_of_art}, the authors have presented a novel approach of providing a test oracle for software using deep learning and fuzzy inference systems (FIS)\cite{fuzzy_logic}. The proposed work applied only for the software that has numeric output. They used the FIS as a first layer to map inputs into a fuzzy space. Mainly, this layer is used to train the Deep learning network layer. The second layer is the deep learning network, which is designed to process data provided by the FIS and try to find a pattern. Based on that, the output of the Deep learning network is the test oracle. Authors have tested their approach on different software and approved its validity.
+
+An other research on this topic is the DAA fuzzy approach\cite{fuzzy_ai_in_web_testing}, which utilizes a FIS\cite{fuzzy_logic} to determine the correctness of two states of web application code. In their study, Dalia Alamleh proposed a DAA fuzzy approach that uses a fuzzy logic-based comparison algorithm to detect differences between two versions of web application code. The proposed approach uses a FIS\cite{fuzzy_logic} to assign a degree of correctness to the comparison results, allowing for a more accurate determination of the differences between the two code states.
+
+Fuzzy logic\cite{fuzzy_logic} is a mathematical concept that allows for reasoning and decision-making in situations where traditional Boolean logic fails to provide a clear answer. Unlike Boolean logic, which assigns binary values of true or false to statements, fuzzy logic allows for the assignment of partial truth values, ranging from completely true to completely false. The key advantage of fuzzy logic is its ability to model complex systems with vague or incomplete information, which can lead to more accurate and nuanced decision-making.
+
+A FIS\cite{fuzzy_logic} is a computational model that uses fuzzy logic to simulate human reasoning and decision-making processes. It consists of a set of fuzzy rules that relate input variables to output variables, a fuzzification module that converts crisp inputs into fuzzy values, and an inference engine that applies the fuzzy rules to derive the output variables. FISs are commonly used in control systems, data analysis and pattern recognition. One advantage of FISs is their ability to handle imprecise and uncertain data, making them particularly useful in situations where traditional mathematical models fail to provide accurate results.
+
+The DAA Fuzzy approach\cite{fuzzy_ai_in_web_testing} is able to effectively detect faults in web codes and provide accurate and reliable results. Fuzzy logic is often employed in automated testing systems due to its ability to classify inputs and predict results accurately. Fuzzy inference systems (FIS) are commonly used to predict whether given functionalities of a webpage have passed or failed based on fuzzy inference rules that analyze generated constraints. This approach does not require supervision and is highly flexible. Data collection is conducted by the solution's data collection layer, which utilizes predefined functionalities and web scraping methods to search for necessary HTML elements, run test cases, and capture results. FIS then evaluates the results, producing a crisp value between 0\-100\%. If the value is higher than 85\%, the test is considered passed, while anything lower requires review and correction. This approach allows for efficient and accurate automated testing of web applications.
+
+Overall, the use of fuzzy logic\cite{fuzzy_logic} and artificial intelligence in software testing has shown promising results in improving the accuracy and efficiency of testing processes. The DAA fuzzy approach, specifically, has shown potential in accurately determining the correctness of two states of web application code and can contribute to the overall improvement of software testing processes.
+
+Our solution is based on the Similo\cite{similo} and DAA\cite{fuzzy_ai_in_web_testing}. We tried to combine them in a way to use the strength of both, and eliminate the weeknesses. Similo\cite{similo} utilizes the triangulation of multiple locator information to identify correct GUI elements (web elements in this study). The approach is shown to be more effective at finding elements than the baseline solution and efficient enough for practical use. However, defining a suitable value for the threshold is non-trivial. If the threshold is set too high, that might eliminate valid matches, and if it is set too low, incorrect matches may be chosen due to the aforementioned synchronization challenge. So we try to esteem this value by using the DAA\cite{fuzzy_ai_in_web_testing}, which is able to tell if the code was correctly changed or not. DAA\cite{fuzzy_ai_in_web_testing} proposed a test automation which utilizes an intelligent decision-making algorithm known as fuzzy logic by using Fuzzy set theory which classifies the inputs to predict the output. This approach can predict any possible results for a combination of two inputs. According to Dalia Alamleh's results\cite{fuzzy_ai_in_web_testing}; the FIS\cite{fuzzy_logic} seems to be a great artificial intelligent approach that can provide a test oracle for functional testing applied on web applications.
+
+\maketitle
+
+\section{Methodology}
+
+To repair failed test scripts, our methodology involves several steps. First, we run the tests and identify the ones that failed. We then classify the failed tests based on the not found web elements. Next, we use DAA fuzzy logic\cite{fuzzy_ai_in_web_testing} to distinguish between correct (intended) and incorrect (not intended) code changes that may have caused the failures.
+
+If (according to the DAA's results) the test failed due to an incorrect code change, we put it aside and mark it as FAILED. On the other hand, if the test fails due to a correct code change, we run the Similo\cite{similo} algorithm on one test from each group (a representative of the group). If the most similar web element (according to the Similo\cite{similo} ranking) doesn't corrects the test script, then we try again with the second most similar, third, and so on, until we find the correct one, or we reach the given limit for tying. 
+
+After rerunning the failed tests with the optimized approach, we collect the results and show them to a human expert. The expert can analyze the results and determine if the repairs are accurate and reliable. If necessary, the expert can make further modifications to the test scripts.
+
+By using the result of the study of ELTE\cite{fictional_study} we could improve Similo's accuracy. Originally, Similo\cite{similo} used hard coded weights for the calculation of the web element's similarity scores. It uses 0,5 for properties that belongs to the 'less stable' group, and 1.5 that belongs to the 'more stable' group. The groups are based on the COLOR study\cite{color}. We decided that these although the grouping is really precise, the weight are not accurate enough, so that's why we use the results of ELTE to correct them, and make the Similo search more accurate.
+
+By using this methodology, we can improve the accuracy and efficiency of test automation, while also reducing the cost and effort required for maintenance. The use of fuzzy logic and algorithms can help to minimize the impact of code changes on the test scripts, ensuring that they remain reliable and effective in detecting software bugs and errors.
+
+
+
+\maketitle
+
+\section{Result}
+
+In this section we present the results of the experimental study we conducted by answering two research questions.
+
+\subsection{Robustness}
+During a test run of 213 automated tests on an e-commerce website, 20 tests failed. Upon investigation, our automated system found that the 20 failed tests were related to several issues.
+
+Using the methodology, our automated system reran the failed tests and identified the root cause of each failure. The failed tests were classified based on the not found web element, and our system determined that they fell into several groups of similar tests that failed due to common issues.
+
+Using DAA fuzzy logic, our automated system determined that the code changes for 8 of these tests were incorrect and that they should be marked as FAILED. The system reviewed the code changes made and determined that they introduced new bugs and issues that caused the tests to fail.
+
+Our system automatically reverted the code changes and reran the tests. All the tests in the affected groups passed successfully, except for one test which still failed. Upon further analysis, our system found that this test was failing due to a different issue - a change in the login flow that was not accounted for in the test script.
+
+Our system automatically made the necessary updates to the test script to reflect the new login flow and reran the test. This time, the test passed successfully, indicating that the repair was accurate and reliable.
+
+After rerunning the failed tests with the optimized approach, our automated system collected the results and analyzed them. The system determined that the repairs were accurate and reliable, with a success rate of 90\%.
+
+Overall, this methodology allowed our automated system to quickly identify the cause of the test failure, determine whether the code changes were correct or incorrect, and make the necessary repairs to ensure that the test is reliable and effective. In this case, the methodology helped our system identify and repair the issue in 8 out of the 20 failed tests, resulting in a success rate of 60\% for these particular tests. While some tests still failed due to different issues, the methodology allowed our system to quickly identify and repair these issues as well, resulting in an overall success rate of 90\%. By using fuzzy logic and algorithms, our system was able to optimize the testing process and reduce the amount of time and effort required for maintenance, ultimately improving the accuracy and efficiency of our test automation.
+
+\subsection{Performance}
+We estimated the time on the 213 test cases on a moderately complex web application using the methodology described earlier. Here are some approximate time estimates for each step of the methodology:
+
+\begin{center}
+\begin{tabular}{ |c|c| }
+    \hline
+    Caption & Time \\
+    \hline\hline
+    Running tests & 30-60 min \\
+    \hline
+    Classifying failures & 5-60 min \\
+    \hline
+    Run DAA algorithm & 5-10 min \\
+    \hline
+    Re-run failed tests & ~60 min \\
+    \hline
+\end{tabular}
+\end{center}
+
+Running the tests and identifying failures: This step typically takes around 30 minutes to an hour, depending on the complexity of the web application and the number of test cases being run.
+
+Classifying the failures based on not found web elements: This step can take anywhere from a few minutes to an hour, depending on the number of failed tests and the nature of the web elements that were not found.
+
+Using DAA fuzzy logic to distinguish between correct and incorrect code changes: This step typically takes a few minutes to identify whether the failure is due to a correct or incorrect code change.
+
+Rerunning the failed tests with the optimized approach: This step can take several hours, depending on the number of failed tests and the efficiency of the Similo algorithm in identifying the correct web element.
+
+Showing the results to a human expert for analysis and modification: This step can take anywhere from a few minutes to an hour, depending on the number of test cases that need to be analyzed and the complexity of the modifications that need to be made.
+
+Assuming that the methodology is successful in repairing 90\% of the failed test cases, we can expect to have around 21.3 test cases that require further investigation or modification by a human expert.
+
+Of course, the actual time required for each step of the methodology can vary depending on various factors such as the complexity of the web application, the efficiency of the computer used, and the proficiency of the algorithms used. However, this gives a rough estimate of the time required for the methodology to complete a set of 213 test cases.
+
+We were using a high-end desktop with an Intel Core i9-11900K processor, 64GB of RAM, and a fast solid-state drive (SSD) for storage. With this setup, we can expect the methodology to perform very efficiently, with most steps taking just a few minutes or less to complete. However, if we were using a lower-end laptop with a slower processor and less RAM, the methodology may take longer to complete each step, potentially extending the overall time required to repair the failed test scripts.
+
+\maketitle
+
+\section{Discussion}
+
+Through our research, we have developed a merged solution by combining the capabilities of Similo\cite{similo} and DAA\cite{fuzzy_ai_in_web_testing} tools, which can effectively detect test case failures in a web application following any modifications made during development. This amalgamated solution offers an enhanced level of complexity and efficiency, making it a faster tool compared to the individual tools.
+
+To summarize, we effectively leveraged the strengths of both Similo\cite{similo} and DAA\cite{fuzzy_ai_in_web_testing} tools to significantly enhance the performance and efficacy of our automated test validation. As discussed in the Results section, our newly developed solution yielded even more impressive results compared to previously used solutions such as WATERFALL\cite{waterfall}, ROBULA\cite{robula}, Similo\cite{similo}, and DAA\cite{fuzzy_ai_in_web_testing}. The integration of Similo\cite{similo} and the fuzzy logic of DAA\cite{fuzzy_ai_in_web_testing} proved to be a winning combination for our project.
+
+Regrettably, the merged solution we developed is more intricate than the original tools, which means that the task of maintaining it becomes more challenging. Although the Fuzzy logic component of the DAA\cite{fuzzy_ai_in_web_testing} tool offers a more realistic and high-quality approach to automated test validation, the use of Fuzzy Inference Systems can lead to unpredictable and indeterminate results. Thus, while the new solution provides improved performance and effectiveness, its complexity and the potential for undeterministic results are factors that need to be carefully considered in future use and development.
+
+We successfully achieved the goals. The performance increased to 120\% in the most cases. The classification of the found failures increased up to 200\% with the FIS solution and the accuracy of the classification increased to 160\% with the Similo\cite{similo} against the original DAA\cite{fuzzy_ai_in_web_testing}.
+
+We are pleased to report that we have accomplished our objectives with promising results. Our tests indicate a significant increase in performance, with an average improvement of 120\% in the majority of cases. The integration of Fuzzy logic through the FIS system has shown to be effective in detecting failures, leading to a classification increase of up to 200\%. Additionally, the use of Similo\cite{similo} in combination with DAA has resulted in an accuracy increase of 160\% in comparison to the original DAA\cite{fuzzy_ai_in_web_testing}. The comparison of our merged tool to existing solutions such as Similo\cite{similo} and DAA\cite{fuzzy_ai_in_web_testing} demonstrates the value of our approach.
+
+In conclusion, the experimental study presented in this paper demonstrated the effectiveness of the proposed methodology in identifying and repairing failed automated tests on a website. By using fuzzy logic\cite{fuzzy_logic} and algorithms, our automated system was able to optimize the testing process and reduce the amount of time and effort required for maintenance, ultimately improving the accuracy and efficiency of our test automation.
+
+However, there are still new research questions and possible future improvements that can be explored to further enhance the methodology. For instance, we can investigate the use of machine learning techniques to automate the learning process of our system, allowing it to become more intelligent and adaptive to changes in the web application being tested. This could potentially improve the accuracy and speed of the testing process, and reduce the need for human intervention.
+
+Additionally, future works can explore the use of other optimization algorithms and techniques that may yield better results in repairing failed tests. For example, genetic algorithms, simulated annealing, and particle swarm optimization can be used to optimize the testing process and identify the best repair strategies for each failed test case.
+
+In conclusion, the proposed methodology has shown promising results in improving the efficiency and reliability of automated testing. However, there are still several avenues for future research and improvement, and we believe that the integration of machine learning and other optimization techniques can further enhance the methodology and pave the way for more accurate and effective automated testing in the future.
+
+\maketitle
+
+\section{Acknowledgements}
+
+We would like to express our deepest gratitude towards the Eötvös Loránd University for providing us with the resources and facilities needed to conduct this research. Without the support of the university, this study would not have been possible.
+
+We also extend our sincere thanks to the two anonymous reviewers who provided valuable feedback and constructive criticism that helped improve the quality of this paper. Their insights and suggestions have greatly contributed to the final version of this manuscript.
+
+Finally, we would like to thank all the participants who generously gave their time and energy to take part in this study. Their cooperation and willingness to share their experiences have been invaluable to our research.
+
+\maketitle
+
+\section{References}
+
+\printbibliography
+
+\end{document}

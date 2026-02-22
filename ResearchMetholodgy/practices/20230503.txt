@@ -1,0 +1,38 @@
+- Conference
+  - Change Detection
+    - CDN
+    - Very good figures
+      - Talkative
+    - Based on Spark
+    - Detect changes in streaming context
+      - Sliding window streams
+    - Like spotify
+      - Buffering problem solving
+      - Using geo-distributed streams
+  - Smart City
+    - Effects of auto text service
+    - Communication between the traffic devices and the auto vehicle
+      - Infrastructure
+      - Network
+      - Other vechicles
+    - Sensors, connections
+    - Machine Learning, Big Data
+    - Security issues
+      - DoS, MAC address, Bruteforce, Eavesdropping, Man in the middle attacks
+  - Detection AI
+    - Defense against cyber attacks
+    - DDos attack
+    - AI detect pattern (easily) in large data
+      - Fast, repetative
+    - Realtime solution
+      - Multi-layered perception
+    - Combined multiple architectures
+    - More detailed alerts
+    - Earlier detection - less network traffic
+    
+    
+- Thank you for the presentation!!! Merci <3
+- Next tasks
+  - Continue the project filling
+  - ToDo list in the Git repo
+- Review by the next week
