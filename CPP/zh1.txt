@@ -1,0 +1,238 @@
+
+0. (1p)
+
+Which movie is related to this code:
+
+while ( ! (0 == *p) ) ++p
+
+  Star Trek 
+X Star Wars
+  Stargate 
+  Stardust
+
+
+1. (2p)
+
+What is the "expression problem" 
+
+  Instantiated objects don't have the ability to express themselves
+X Object hierarchies are hard to extend by new crosscutting functions
+  Object hierarchies are hard to extend by new derived classes
+  Expression evaluation is not always deterministic
+
+
+2. (3p)
+
+What is the result of this program by teh standad?  Choose only one answer!
+
+void f()   
+{
+  int i = 1;     
+  std::cout << i << ++i << std::endl;
+}
+
+   11
+   22
+   12
+X  this is non-defined behavior
+
+
+4. (5p)
+ 
+struct Base { ... };
+struct Der1 : public Base { ... };
+struct Der2 : public Base { ... };
+struct Der3 : public Der2 { ... };
+
+void f()
+{
+   ...
+   throw new Der3{};
+   ...
+}
+
+void g()
+try {
+  f();
+}
+catch ( void* ) { ... }
+catch ( Der1* ) { ... }
+catch ( Der2* ) { ... }
+catch ( Der3* ) { ... }
+catch ( Base* ) { ... }
+
+  This is undefined behavior
+  Der1*
+X void*
+  Der2*
+  Der3*
+  Base*
+
+
+4. (5p)
+
+What does it mean the following in C++11?   Choose only one answer!
+
+template <class T>
+void f(T &t) noexcept (noexcept( g(t) )) { g(t); }
+
+   The g() function newer throws exception
+   The f() function never throws exception
+X  The f() function throws exception only if g(t) throws exception
+   The f() function aborts if g(t) throws exception
+
+
+5.  (7p)
+
+Is it possible to declare?  (multiple choice is possible)
+
+   A constructor as virtual function
+   A copy constructor as virtual function
+X  A destructor as virtual function
+   A copy constructor with non reference parameter
+X  A copy constructor with non constant parameter
+X  An assignment operator as virtual function
+X  An assignment operator with non reference parameter
+
+
+6/a  (5p)
+
+// C++11
+struct X
+{
+  X& operator=(const X&);
+  std::vector<int> v_;
+};
+
+X the compiler provides a copy constructor
+X the compiler provides a default constructor
+  the compiler provides a move constructor
+  the compiler provides a move operator
+X the compiler provides a destructor 
+
+
+6/b   (5p)
+==
+
+// C++11
+struct X
+{
+  X(const X&);
+  std::vector<int> v_;
+};
+
+X the compiler provides a copy assignment operator
+  the compiler provides a default constructor
+  the compiler provides a move constructor
+  the compiler provides a move operator
+X the compiler provides a destructor 
+
+ 
+
+7.  (4p)
+ 
+What does the program print (2p)? Explain (2p)!
+
+
+template <class T>
+struct Base { void f() { std::cout << "Base::f()"; } };
+
+template <class T>
+struct Der: public Base<T> { void g() { f(); } };
+
+int main() {
+  Der<int> d; d.g();
+}
+
+   Base::f()
+   this will cause a run-time error
+X  this is compile error, the program does not compile
+
+
+
+8.  (6p)
+
+Mark the case(s), when lifetime extension is applied. Multiple choice is possible.
+
+
+struct X
+{
+  X(int i) : p_(new char[1024]), i_(i) { }
+  ~X() { delete [] p_; }
+
+  char *p_;
+  int   i_;
+  static int s_;
+};
+X operator+(X x1, X x2) { return X{x1.i+x2.i}; }
+
+void f()
+{
+  X x1{1}, x2{2};
+  const char * &rp = (x1+x2).p_;
+  const char   &rc = (x1+x2).p_[1];
+  int          &ir = (x1+x2).i_;
+  int          &sr = (x1+x2).r_
+  static int   &sr = (x1+x2).r_
+}
+
+X const char *&rp  = (x1+x2).p_;
+  const char  &rc  = (x1+x2).p_[1];
+X int         &ir1 = (x1+x2).i_;
+  int         &sr1 = (x1+x2).r_
+X static int  &ir2 = (x1+x2).i_;
+  static int  &sr2 = (x1+x2).r_
+
+
+9. (6p) 
+
+Describe what is the problem(s) with the class X?  (3p)
+                write the correct code of X        (3p)
+
+struct X
+{
+  std::shared_ptr<X> getMe() const
+  {
+    return std::shared_ptr<X>(this);
+  }
+  // more stuff here ...
+};
+
+void f()
+{
+  std::shared_ptr<X> p{new X};
+  std::vector<std::shared_ptr<X>>  vx;
+  for ( int i = 0; i < 10; ++i) 
+    vx.push_back(p->getMe());
+}
+
+
+10.  (6p)
+
+What could be the output of the program? Multiple choice is possible.
+
+#include <iostream>
+#include <atomic>
+#include <thread>
+
+std::atomic<int> a;  
+std::atomic<int> b;
+
+int main()
+{
+  std::thread t1( []{ a.store(1, std::memory_order_release);
+                      b.store(2, std::memory_order_release); });
+  std::thread t2( []{ std::cout << b.load(std::memory_order_acquire) ;
+                      std::cout << a.load(std::memory_order_acquire) ; });
+  t2.join();
+  t1.join();
+}
+
+X  00
+X  21
+X  01
+   20
+   This is run-time error, since we call t2.join() before t1.join()
+   This is undefined behaviour, due to race condition between a and b
+
+

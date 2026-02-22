@@ -1,0 +1,9 @@
+{
+  "files.associations": {
+    "*.cshtml": "html",
+    "iostream": "cpp",
+    "cstring": "cpp",
+    "utility": "cpp",
+    "optional": "cpp"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "files.associations": {
+    "*.cshtml": "html",
+    "mutex": "cpp",
+    "atomic": "cpp",
+    "thread": "cpp",
+    "future": "cpp"
+  }
+}
