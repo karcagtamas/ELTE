@@ -1,0 +1,36 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX dbp:<http://dbpedia.org/property/>
+PREFIX dbo:<http://dbpedia.org/ontology/>
+
+SELECT ?firstFlight ?aircraft
+WHERE {
+?aircraft rdf:type dbo:Aircraft .
+?aircraft dbp:firstFlight ?firstFlight
+}
+
+
+
+PREFIX dbp:<http://dbpedia.org/property/>
+PREFIX dbo:<http://dbpedia.org/ontology/>
+PREFIX dbr:<http://dbpedia.org/resource/>
+
+SELECT ?child
+WHERE {
+dbr:The_Lord_of_the_Rings dbp:author ?author.
+?author dbo:child ?child
+}
+
+
+
+PREFIX dbp:<http://dbpedia.org/property/>
+PREFIX dbo:<http://dbpedia.org/ontology/>
+PREFIX dbr:<http://dbpedia.org/resource/>
+
+SELECT *
+WHERE {
+?app dbo:genre dbr:Cloud_computing .
+?app dbo:latestReleaseVersion ?ver.
+?app dbp:license ?license.
+FILTER (?license = dbr:Apache_License)
+}
+

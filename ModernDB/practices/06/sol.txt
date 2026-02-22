@@ -1,0 +1,30 @@
+db.tweets.aggregate([
+    {$sort: {"user.friends_count": 1}},
+    {$group: {
+        _id: null,
+        first: {$first: "$user.friends_count"},
+        last: {$last: "$user.friends_count"}
+    }}
+])
+
+db.tweets.aggregate([
+    {$group: {
+        _id: "$lang",
+        count: {$sum: 1}
+    }},
+    {$sort: {count: -1}}
+])
+
+db.tweets.aggregate([
+    {$group: {
+        _id: "$user.id",
+        tweets: {$sum: 1}
+    }},
+    {$match: {
+        tweets: {$gt: 1}
+    }},
+    {$group: {
+        _id: null,
+        user_count: {$sum: 1}
+    }}
+])

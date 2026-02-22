@@ -1,0 +1,22 @@
+<!DOCTYPE NEWSPAPER [
+  <!ENTITY NEWSPAPER "Vervet Logic Times">
+  <!ENTITY PUBLISHER "Vervet Logic Press">
+  <!ENTITY COPYRIGHT "Copyright 1998 Vervet Logic Press">
+]>
+
+<NEWSPAPER>
+  <ARTICLE AUTHOR="VPetya" DATE="2015-03-11">
+    <HEADLINE>Sikerült valid cikket irnom</HEADLINE>
+    <LEAD>HIHETETLEN ez valid</LEAD>
+    <BODY>HIHETETLEN ez a cikk a &NEWSPAPER;-ben valid</BODY>
+    <NOTES>Ne felejtsül el kiadni</NOTES>
+    <NOTES>Kiadtad már?</NOTES>
+    <NOTES>És most??</NOTES>
+  </ARTICLE>
+  <ARTICLE AUTHOR="VPetya" EDITOR="Laci" EDITION="2015-03-12">
+    <HEADLINE>Sikerült még egy valid cikket irnom</HEADLINE>
+    <BYLINE>HIHETETLEN ez is valid, pedig ennek még byline-ja is van</BYLINE>
+    <LEAD>HIHETETLEN ez is valid</LEAD>
+    <BODY>HIHETETLEN már az elsõ valid cikket is kiadta a &PUBLISHER;</BODY>
+  </ARTICLE>
+</NEWSPAPER>

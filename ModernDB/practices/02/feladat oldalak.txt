@@ -1,0 +1,36 @@
+﻿DTD:
+https://www.xmlvalidation.com/
+
+példa:
+<?xml version="1.0"?>
+<!DOCTYPE note [
+<!ELEMENT note (to,from,heading,body)>
+<!ELEMENT to (#PCDATA)>
+<!ELEMENT from (#PCDATA)>
+<!ELEMENT heading (#PCDATA)>
+<!ELEMENT body (#PCDATA)>
+]>
+<note>
+<to>Tove</to>
+<from>Jani</from>
+<heading>Reminder</heading>
+<body>Don't forget me this weekend</body>
+</note>
+
+XSD:
+http://www.utilities-online.info/xsdvalidation/
+
+XPATH
+https://www.online-toolz.com/tools/xpath-tester-online.php
+
+
+XQUERY
+http://www.semwebtech.org/xquery-demo/
+
+other source: https://www.w3schools.com/xml/books.xml
+
+kodban: doc("https://www.w3schools.com/xml/books.xml")/
+
+
+XSLT:
+http://xslttest.appspot.com/

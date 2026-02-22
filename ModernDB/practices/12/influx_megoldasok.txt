@@ -1,0 +1,59 @@
+buckets()
+
+import "influxdata/influxdb/schema"
+schema.measurements(bucket: "telegraf")
+
+
+import "influxdata/influxdb/schema"
+schema.measurementFieldKeys(bucket: "telegraf", measurement:"cpu")
+
+import "influxdata/influxdb/schema"
+schema.measurementTagKeys(bucket: "telegraf", measurement:"cpu")
+
+import "influxdata/influxdb/schema"
+schema.measurementTagValues(bucket: "telegraf", measurement:"cpu", tag:"cpu")
+
+from(bucket: "telegraf")
+|> range(start:-1m, stop:now())
+|> filter(fn: (r) => r["_measurement"] == "cpu")
+|> filter(fn: (r) => r["cpu"] == "cpu-total")
+
+from(bucket: "telegraf")
+|> range(start:-5m, stop:now())
+|> filter(fn: (r) => r["_measurement"] == "cpu")
+|> filter(fn: (r) => r["cpu"] == "cpu-total")
+|> filter(fn: (r) => r["_field"] == "usage_user")
+|> mean()
+
+from(bucket: "telegraf")
+|> range(start:-inf, stop:now())
+|> filter(fn: (r) => r["_measurement"] == "cpu")
+|> filter(fn: (r) => r["cpu"] != "cpu-total")
+|> group(columns: ["cpu"])
+|> last()
+
+from(bucket: "telegraf")
+|> range(start:-1h, stop:now())
+|> filter(fn: (r) => r["_measurement"] == "cpu")
+|> filter(fn: (r) => r["cpu"] != "cpu-total")
+|> filter(fn: (r) => r["_field"] == "usage_user")
+|> window(every:10m)
+|> mean()
+|> duplicate(column: "_stop", as: "_time")
+|> drop(columns: ["_start","_stop","_measurement","host"])
+
+from(bucket: "telegraf")
+|> range(start:-1h, stop:now())
+|> filter(fn: (r) => r["_measurement"] == "cpu")
+|> filter(fn: (r) => r["cpu"] != "cpu-total")
+|> filter(fn: (r) => r["_field"] == "usage_user")
+|> aggregateWindow(every:10m, fn: mean)
+|> drop(columns: ["_start","_stop","_measurement","host"])
+
+from(bucket: "telegraf")
+|> range(start:-inf, stop:now())
+|> filter(fn: (r) => r["_measurement"] == "cpu" and r["cpu"] == "cpu-total" and r["_field"] == "usage_user")
+|> top(n:5, columns: ["_value"])
+
+
+

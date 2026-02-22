@@ -1,0 +1,22 @@
+Kolcsonzesek.txt -re vonatkozó feladatok:
+
+-- 1.) Igaz-e, hogy minden Kolcsonzo kölcsönzött DVD-t?
+-- 2.) Hány kölcsönzõ van? Valójában a neveiket számoljuk meg.
+-- 3.) Adjuk meg a kölcsönzõk nevét és az általuk kölcsönzött CD-k árának összegét! 
+         (XML formátumban) 
+-- 4.) Mely CD-ket kölcsönözte ki Kis Virag?
+-- 5.) Igaz-e, hogy minden kölcsönzõ kölcsönzött CD-t? (az eredmény igen vagy nem legyen)
+-- 6.) Mennyi a kölcsönzött DVD-k árának összege? (string nélkül csúnyán írja ki)
+-- 7.) Mennyi a legolcsóbb CD ára?
+-- 8.) Adjuk meg az alábbi formában, hogy ki hány darab dolgot kölcsönzött.
+         OSZLOP 
+         ----------------------------------------
+         <Kolcsonzo nev="Gipsz Jakab" darab="4"/> 
+         <Kolcsonzo nev="Kis Virag" darab="3"/> 
+         <Kolcsonzo nev="Nagy Pal" darab="1"/> 
+-- 9.) Adjuk meg az alábbi formában, hogy ki milyen összértékû dolgokat kölcsönzött. 
+         OSZLOP 
+        -------------------------------------------
+        <Kolcsonzo nev="Gipsz Jakab" össz="11500"/> 
+        <Kolcsonzo nev="Kis Virag" össz="8700"/> 
+        <Kolcsonzo nev="Nagy Pal" össz="2500"/>

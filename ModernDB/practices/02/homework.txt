@@ -1,0 +1,31 @@
+//book[year>2003 and @category = "CHILDREN"]/price/text()
+
+for $b at $i in
+doc("http://ggombos.web.elte.hu/oktatas/KorszeruAdatbazisok/gyakorlat/week2_Xml/inputok/elso_konyvesbolt.xml")/bookstore/book
+order by $b/price descending
+return <book>{$i}. {$b/title/text()} - author(s): {string-join($b/author, ", ")} ({$b/year/text()}), price ${$b/price/text()}</book>
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:template match="/">
+<html> 
+<body>
+  <ul>
+    <xsl:for-each select="bookstore/book">
+    <xsl:sort select="year" />
+      <li>
+        <xsl:for-each select="author">
+          <xsl:value-of select="text()" />, 
+        </xsl:for-each>:
+        <xsl:value-of select="title" />
+        (<xsl:value-of select="year" />),
+        price: $<xsl:value-of select="price" />
+      </li>
+    <xsl.for-each>
+  </ul>
+</body>
+</html>
+</xsl:template>
+</xsl:stylesheet>
+

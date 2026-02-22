@@ -1,0 +1,141 @@
+﻿!!!!!!! XML megoldasok !!!!!!!!!
+
+######## DTD feladat ###########
+
+<!DOCTYPE NEWSPAPER [
+
+<!ELEMENT NEWSPAPER (ARTICLE+)>
+<!ELEMENT ARTICLE (HEADLINE,BYLINE?,LEAD,BODY,NOTES*)>
+<!ELEMENT HEADLINE (#PCDATA)>
+<!ELEMENT BYLINE (#PCDATA)>
+<!ELEMENT LEAD (#PCDATA)>
+<!ELEMENT BODY (#PCDATA)>
+<!ELEMENT NOTES (#PCDATA)>
+
+<!ATTLIST ARTICLE AUTHOR CDATA #REQUIRED>
+<!ATTLIST ARTICLE EDITOR CDATA #IMPLIED>
+<!ATTLIST ARTICLE DATE CDATA #IMPLIED>
+<!ATTLIST ARTICLE EDITION CDATA #IMPLIED>
+
+<!ENTITY NEWSPAPER "Vervet Logic Times">
+<!ENTITY PUBLISHER "Vervet Logic Press">
+<!ENTITY COPYRIGHT "Copyright 1998 Vervet Logic Press">
+]>
+
+######## XSD feladat ###########
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<xs:element name="NEWSPAPER">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="ARTICLE" minOccurs="1" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="HEADLINE" type="xs:string"/>
+            <xs:element name="BYLINE" minOccurs="0" type="xs:string"/>
+            <xs:element name="LEAD" type="xs:string"/>
+            <xs:element name="BODY" type="xs:string"/>
+            <xs:element name="NOTES" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+          </xs:sequence>
+          <xs:attribute name="AUTHOR" type="xs:string" use="required"/>
+          <xs:attribute name="EDITOR" type="xs:string"/>
+          <xs:attribute name="DATE" type="xs:date"/>
+          <xs:attribute name="EDITION" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+
+  </xs:complexType>
+</xs:element>
+
+</xs:schema>
+
+######## XPATH feladat ###########
+Adjuk meg az összes szerzőt!
+//author
+
+Adjuk meg a 35-nél drágább könyvek címeit!
+/bookstore/book[price>35]/title
+
+Adjuk meg a gyerekkönyvek szerzőit!
+/bookstore/book[@category="CHILDREN"]/author
+
+Adjuk meg a webbel foglalkozó, 35-nél drágább könyvek szerzőit!
+/bookstore/book[@category="WEB"][price>35]/author
+
+Adjuk meg a webbel foglalkozó könyvek árának összegét!
+sum(/bookstore/book[@category="WEB"]/price)
+
+######## XQUERY FLOWER feladat ###########
+Adjuk meg a 2003-as könyvek szerzőit!
+
+for $x in doc("http://ggombos.web.elte.hu/oktatas/KorszeruAdatbazisok/gyakorlat/week2_Xml/books.xml")/bookstore/book
+where $x/year=2003
+return $x/author
+
+Adjuk meg a 2005-ös gyerekkönyvek árát (tag-ek nélkül)!
+
+for $x in doc("http://ggombos.web.elte.hu/oktatas/KorszeruAdatbazisok/gyakorlat/week2_Xml/books.xml")/bookstore/book
+where $x/year=2005 and $x[@category="CHILDREN"]
+return $x/price/text()
+
+Készítsünk saját XML-szerű kimenetet az összes szerzőről, a következő formátumban:
+<author id="[sorszám]">[szerző]</author>
+
+for $x at $i in doc("http://ggombos.web.elte.hu/oktatas/KorszeruAdatbazisok/gyakorlat/week2_Xml/books.xml")/bookstore/book/author
+return <author id="{$i}"> {$x/text()}</author>
+
+Készítsünk saját XML-szerű kimenetet, a következő formában:
+<book>[sorszám a feldolgozási ciklusban]. [cím] - author(s): [szerzők]</book>
+Az eredmény legyen a cím szerint rendezve (ez a feldolgozási sorrenden nem változtat)!
+
+for $x at $i in doc("http://ggombos.web.elte.hu/oktatas/KorszeruAdatbazisok/gyakorlat/week2_Xml/books.xml")/bookstore/book
+order by $x/title
+return <book> {$i}. {$x/title/text()} - author(s): {$x/author/text()} </book>
+
+Let-et használva listázzuk ki a könyvek árait! 
+
+let $x := doc("http://ggombos.web.elte.hu/oktatas/KorszeruAdatbazisok/gyakorlat/week2_Xml/books.xml")/bookstore/book
+return $x/price/text()
+
+######## XSLT feladat ###########
+A CD katalógust listázzuk úgy ki, hogy az énekes, lemezcím és ár jelenjen meg!
+Csak az 1990 utáni Cd-k összes adatát listázzuk ki. (Az év fejléc piros legyen, a többi kék.)
+Az előző XSLT-t fejlesszük tovább, hogy az 1998 előtti CD-k esetén a sorok év mezőinek hátterét világosszürkére, a többit világospirosra színezze!
+
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+<xsl:template match="/">
+  <html>
+  <body>
+  <h2>My CD Collection</h2>
+    <table border="1">
+      <tr>
+        <th style="text-align:left" bgcolor="#ff0000">Year</th>
+        <th style="text-align:left" bgcolor="#0000ff">Title</th>
+        <th style="text-align:left" bgcolor="#0000ff">Artist</th>
+        <th style="text-align:left" bgcolor="#0000ff">Price</th>
+      </tr>
+      <xsl:for-each select="catalog/cd[year&gt;1990]">
+      <tr>
+        <xsl:choose>
+          <xsl:when test="year &gt; 1997">
+            <td bgcolor="#770000"><xsl:value-of select="year"/></td>
+          </xsl:when>
+          <xsl:otherwise>
+            <td bgcolor="#777777"><xsl:value-of select="year"/></td>
+          </xsl:otherwise>
+        </xsl:choose>
+        <td><xsl:value-of select="title"/></td>
+        <td><xsl:value-of select="artist"/></td>
+        <td><xsl:value-of select="price"/></td>
+      </tr>
+      </xsl:for-each>
+    </table>
+  </body>
+  </html>
+</xsl:template>
+</xsl:stylesheet>

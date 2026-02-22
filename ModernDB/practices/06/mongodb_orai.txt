@@ -1,0 +1,100 @@
+Feladatok:
+	- Hány tweet van?
+		db.tweets.find().count()
+		
+	- Hány angol nyelvű tweet van? lang = "en"
+		db.tweets.find({lang: "en"}).count()
+	
+	- Hány angol vagy magyar nyelvű tweet van?
+		db.tweets.find({lang: {$in : ["en","hu"]}}).count()
+	
+	- Írassunk ki egy magyar nyelvű tweetet! lang = "hu"
+		db.tweets.findOne({lang: "hu"})
+		db.tweets.findOne({lang: "hu"}).text
+	
+	aggregate:
+	- Írassunk ki 2 tweetet.
+	db.tweets.aggregate([
+		{$limit : 2}
+	])
+	
+	- Írassunk ki 2 magyar tweetet.
+	db.tweets.aggregate(
+		[{$match : {lang : "hu"}},
+		 {$limit : 2}
+		]
+	)
+	
+	- Írassuk ki 2 magyar tweetnek a szövegét.
+	db.tweets.aggregate(
+		[{$match : {lang : "hu"}},
+		 {$project : {text : 1}},
+		 {$limit : 2}
+		]
+	)
+	- Írassuk ki 2 magyar tweetnek a szövegét csökkenő sorrendben.
+	db.tweets.aggregate(
+		[{$match : {lang : "hu"}},
+		 {$project : {text : 1}},
+		 {$limit : 2},
+		 {$sort : {text : -1}}
+		]
+	)
+	
+	- Adjuk meg, hogy melyik nyelvből hány tweet van!
+	db.tweets.aggregate(
+		[
+			{$group : 
+					{ _id: "$lang", 
+					  count: {$sum: 1}
+					}
+			}
+		]
+	)
+	
+	- Adjuk meg, hogy melyik nyelvből hány tweet van, de csak azokat, amelyekből van legalább 10.
+	db.tweets.aggregate(
+		[
+			{$group : 
+					{ _id: "$lang", 
+					  count: {$sum: 1}
+					}
+			},
+			{$match: {count : {$gt : 10}}}
+		]
+	)
+	
+	- Adjuk meg, hogy melyik felhasználó mennyit tweetelt! (user.name)
+
+	db.tweets.aggregate( 
+	  [
+			{$group: 
+				{_id: "$user.name", tweetcount : {$sum: 1}}
+			}
+		]
+	)
+	- Adjuk meg, hogy ki tweetelt a legtöbbet, és mennyit!
+	db.tweets.aggregate( 
+	  [
+			{$group: 
+				{_id: "$user.name", tweetcount : {$sum: 1}}
+			},
+			{$sort : {tweetcount: -1}},
+			{$limit : 1}
+		]
+	)
+	- Adjuk meg egy tweetet, amihez tartozik hashtag!
+	db.tweets.findOne({'entities.hashtags.0': {$exists: true}})
+	
+	db.tweets.aggregate(
+		{$match : {'entities.hashtags.0': {$exists: true}}},
+		{$limit : 1}
+	)
+	
+	- Minden tweethez írjuk ki, hogy melyik user küldte, és hány hashtag-et tartalmaz.
+	db.tweets.aggregate(
+		[{$project: 
+			{"user.name" : 1, ctag : {$size : "$entities.hashtags"}}},
+			{$group : {_id: "$user.name", ossz: {$sum : "$ctag"}}}
+		]
+	)

@@ -1,0 +1,41 @@
+<Kolcsonzesek>
+   <Kolcsonzo nev="Gipsz Jakab">
+     <Konyvek>
+       <Konyv cim="Momo" szerzo="Michael Ende">
+         <Ar>2000</Ar>
+       </Konyv>
+       <Konyv cim="Tuskevar" szerzo="Fekete Istvan">
+         <Ar>2500</Ar>
+       </Konyv>
+     </Konyvek>
+     <CD-k>
+       <CD eloado="Zoran">  
+         <Cim>Szep Holnap</Cim>   
+         <Ar>3000</Ar>
+       </CD>
+     </CD-k>
+     <DVD-k>
+       <DVD ar="4000">Jegkorszak</DVD>
+     </DVD-k>
+   </Kolcsonzo>
+   <Kolcsonzo nev="Kis Virag">
+     <CD-k>
+       <CD eloado="ABBA">  
+         <Cim>Best Of</Cim>   
+         <Ar>2000</Ar>
+       </CD>
+       <CD eloado="Zoran">  
+         <Cim>Igy alakult</Cim>   
+         <Ar>3200</Ar>
+       </CD>
+     </CD-k>
+     <DVD-k>
+       <DVD ar="3500">Shrek</DVD>
+     </DVD-k>
+   </Kolcsonzo>
+   <Kolcsonzo nev="Nagy Pal">
+     <DVD-k>
+       <DVD ar="2500">Uvegtigris</DVD>
+     </DVD-k>
+   </Kolcsonzo>
+ </Kolcsonzesek>

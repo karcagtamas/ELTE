@@ -1,0 +1,30 @@
+﻿MongoDB letöltése:
+	- https://www.mongodb.com/download-center/community
+	- pl: community version, windows, zip, 4.2.5
+	
+MongoDB Command Line Database Tools Download:
+	- https://www.mongodb.com/try/download/database-tools
+	- pl: windows, zip
+
+!!! Alábbi 2 közül 1 is elég: 
+
+1 - MongoDB Compass letöltése:
+	- https://www.mongodb.com/try/download/compass
+	- stable, windows, exe
+
+
+2 - Robomongo letöltése:
+	- https://robomongo.org/download
+		a, robo 3T, alap mongodb lekerdezesekre alkalmas, ezt eleg letolteni
+		b, 3T studio, trial verzio, tobb mindent tud
+
+1, Hozzuk letre a kovetkezo mappat : c:\data\db
+2, Letöltött kicsomagolt mongodb mappaban inditsuk el a  \bin\mongod -t, ez lesz az adatbázisunk
+3, A tools mappában kiadjuk az alábbi parancsot, hogy beimportáljuk az adatokat:
+	- \bin\mongoimport.exe --db test --collection tweets --file tweets.json
+4, Elindítjuk a robo 3T-t
+	- Connection ablakban: create
+	- default beallitasokkal tudunk ra csatlakozni: direct connection, localhost, 27017
+	- Save, majd Connect
+	- testdb-re jobb klikk, majd Open shell
+

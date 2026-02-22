@@ -1,0 +1,25 @@
+1.
+
+match (jeff)-[:KNOWS]->(b)-[:KNOWS]->(c), (jeff)-[:KNOWS]->(c)-[:KNOWS]->(b)
+where jeff.twid = "jeffgortatowsky"
+return b, c
+
+2.
+
+match (u:User)
+return count(u)
+
+3.
+
+match ()-[r:KNOWS]->()
+return count(r)
+
+4.
+
+match (n)<-[r]-()
+return n, count(r)
+
+5.
+
+match (n), p = ((n)-->()-->()-->(n))
+return count(p) / 3

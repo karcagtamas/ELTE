@@ -1,0 +1,81 @@
+﻿Kérdezzük le a server státuszát! ('summary', 'simple', 'detailed')
+>> status
+>> status 'simple'
+>> status 'summary'
+>> status 'detailed'
+
+Segítség: table_help
+>> table_help
+
+Hozzunk létre egy 'korszeru' táblát és egy 'hazik' oszlopcsaláddal!
+>> create 'korszeru', 'hazik'
+
+Listázzuk ki a táblákat!
+>> list
+
+Kérdezzük le a 'korszeru' tábla adatait!
+>> describe 'korszeru'
+
+Inaktiváljuk / aktiváljuk a 'korszeru' táblát!
+>> disable 'korszeru'
+>> enable 'korszeru'
+
+Kérdezzük le hogy aktív-e?
+>> is_enabled 'korszeru'
+
+Nézük meg milyen szűrési lehetőségek vannak az HBASE-ben?
+>> show_filters
+
+Próbáljuk meg törölni a 'korszeru' táblát! (csak akkor lehet ha inaktív)
+>> drop 'korszeru'
+
+Addjunk hozzá új oszlop családot a 'korszeru' táblához! ('hely','hazik'(2 verziót tároljon))
+>> alter 'korszeru', 'hely'
+>> alter 'korszeru', 'NAME'=>'letszam', VERSIONS=>'2'   //ezzel ovatosan, mert ha a NAME-t nem rakod '-be akkor felül definiál egy konstatns és minden elromlik
+>> alter 'korszeru', {'NAME'=>'letszam', VERSIONS=>'2'}   //hány verzió legyen az adott elemből
+
+Töröljük a 'hely' oszlop családot!
+>> alter 'korszeru', 'delete' => 'hely'
+
+Töltsünk be adatot a 'korszeru' tábla 'letszam' oszlopcsalád 'akt' oszlopba: '04.07'=>19,'04.07'=>20,'04.07'=>21, '04.09'=>21, '04.13=>22 timestamp:16177900000'! (sorazon => ertek)
+put 'korszeru', '04.07', 'letszam:akt', 19
+put 'korszeru', '04.07', 'letszam:akt', 20
+put 'korszeru', '04.07', 'letszam:akt', 21
+put 'korszeru', '04.09', 'letszam:akt', 21
+put 'korszeru', '04.13', 'letszam:akt', 22, 16177900000
+put 'korszeru', '04.07', 'letszam:max', 24
+
+
+Kérdezzük le hány elem van a 'korszeru' táblában! 
+// CACHE a lapozási érték egyszerre ennyi sort ad vissza, default 10
+>> count 'korszeru', CACHE=>10
+
+
+Kérdezzük le a 'korszeru' táblát!
+>> scan 'korszeru'
+
+Kérdezzük le a 'korszeru' tábla 'letszam' oszlopcsaládját!
+>> scan 'korszeru', {COLUMNS=>'letszam'}
+
+Kérdezzük le a 'korszeru' tábla értékeit verziokövetéssel!
+>> scan 'korszeru', {RAW=>true, VERSIONS=>1}
+>> scan 'korszeru', {RAW=>true, VERSIONS=>2}
+>> scan 'korszeru', {RAW=>true, VERSIONS=>3}
+
+Kérdezzük le a 'korszeru' tábla '04.07' sorát és a 'letszam' értéket! Timerange legyen 0-1720000000
+>> get 'korszeru', '04.07'
+>> get 'korszeru', '04.07', 'letszam'
+>> get 'korszeru', '04.12', {COLUMNS=>['letszam', TIMERANGE=>[0,1720000000]}
+
+Töröljük a 'korszeru' táblából a '04.07' sor 'letszam' értékét!
+>> delete 'korszeru', '04.07', 'letszam'
+
+Kérdezzük le a táblát 10 verzióval!
+>> scan 'korszeru', {RAW=>true, VERSIONS=>10}
+
+Módosítsuk a '04.12'-es sor 'letszam' értékét 25-re, majd nézzük meg a tábla értékét, majd töröljük azt és nézzük meg ismét az értéket!
+>> put 'korszeru', '04.12', 'letszam', 25
+>> scan 'korszeru'
+>> delete 'korszeru', '04.12', 'letszam'
+>> scan 'korszeru'
+

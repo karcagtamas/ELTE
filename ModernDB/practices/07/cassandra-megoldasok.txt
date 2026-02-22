@@ -1,0 +1,137 @@
+﻿Mit nem tud a cassandra?
+	- aggregation
+	- join
+	- group by
+	- or 
+	- filter column without index
+	- '<', '>' csak a clustering oszlopra mukodik
+
+- Készítsünk egy University keyspace-t, simpleStrategy-vel es replica legyen 2!
+- Módosítsuk hogy a replika csak 1 legyen!
+	
+Create keyspace university with replication={'class':'SimpleStrategy','replication_factor': 2};
+Alter Keyspace University with replication={'class':'SimpleStrategy','replication_factor': 1};
+Drop keyspace University;
+use University;
+	
+- Készítsünk egy music táblát, amelyben a (songid, year) particionalo kulcs, es a songname a clasterezo kulcs. 
+- Minden évben egy új particó fog készülni, és a Songname alapjan klasztereződni fog az adat. A partíciók mindig egy node-n lesznek. 
+- Clustering is the process that sorts data in the partition.
+
+Songid and Year are the partition key, and
+SongName is the clustering column.
+Data will be clustered on the basis of SongName. In this table, each year, a new partition will be created. All the songs of the year will be on the same node. This primary key will be very useful for the data.
+
+Filebol futtatas:
+source 'script.csql'
+
+Create table MusicPlaylist
+    (
+        SongId int,
+        SongName text,
+        Year int,
+        Singer text,
+        Primary key((SongId, Year), SongName)
+    );
+
+desc MusicPlaylist
+
+
+
+Készítsünk join kapcsolatok hallgató és kurzus között! (egy-egy, egy-sok,sok-sok)
+Denormalizalunk, nincs join!!!
+rollnominal - nevsor
+
+one-one (primary key alapjan particional)
+	Create table Student_Course
+    (
+        Student_rollno int primary key,
+        Student_name text,
+        Course_name text,
+    );
+one-many
+	Create table Student_Course
+    (
+        Student_rollno int,
+        Student_name text,
+        Course_name text,
+    );
+Kik járnak az adott kurzusra?
+	Select * from Student_Course where Course_name='Course Name';
+many-many
+	Create table Student_Course
+    (
+        Student_rollno int primary key,
+        Student_name text,
+        Course_name text,
+    );
+Kik járnak az adott kurzusra?
+	Select * from Student_Course where student_rollno=rollno;
+	Create table Course_Student
+    (
+        Course_name text primary key,
+        Student_name text,
+        student_rollno int
+    );
+	Select * from Course_Student where Course_name=CourseName;
+
+
+
+Készítsünk egy hallgató táblát nev, dept, rollno (PK) mezőkkel!
+
+Create table University.Student(
+	RollNo int,
+	Name Text,
+	dept Text,
+	primary key(RollNo)
+);
+
+Adjunk hozzá egy semester oszlopot!
+
+Alter table University.Student add semester int;
+
+Töltsük be a következő értéket: (1,'Gergo','InfRszTsz', 1), Módosítsuk a nevet Gombosra, majd töröljük!
+
+Insert into Student(RollNo,Name,dept,Semester) values (1,'Gergo','InfRszTsz', 1);
+Update University.Student Set name='Gombos' Where rollno=1;
+Delete from University.Student where rollno=1;
+
+
+Töltsük be a következő adatot és álítsuk be hogy csak 10 mp-ig létezzen: (2,'Kiss','InfRsztsz’,7)!
+
+//nem lehet szurni csak indexelt oszlopra!!!!
+select * from University.Student where name='Kiss';
+ttl
+insert into Student(RollNo,Name,dept,Semester) values(2,'Kiss','InfRsztsz',7) using ttl 10;
+select * from Student;
+
+
+Készítsünk egy Tanár táblát a Unversity keyspace-be,a következő oszlopokkal: id(int), name (text), email(set<text>)!
+
+Create table University.Teacher
+(
+id int,
+Name text,
+Email set<text>,
+Primary key(id)
+);
+
+Töltsük be a következő adatot: (l,'Gombos',{'ggombos@infeltehu','ggombos@infeltecom'})
+insert into University.Teacher(id,Name,Email) values(1,'Gombos',{'ggombos@infeltehu','ggombos@infeltecom'});
+
+Adjunk hozzá egy új oszlopot 'coursename', amely list<text> típusú legyen!
+Insertáljunk be adatot ebbe az oszlopba ''Korszeru'!
+
+alter table University.Teacher add coursename list<text>;
+#insert into University.Teacher(id,Name,Email) values(2,'Hamilton',{'hamilton@hotmail.com'},[Data Science']);
+UPDATE University.Teacher SET coursename = ['Korszeru'] where id=1;
+
+Adjunk hozzá egy oszlopot 'prereq' amely map<text,int> típusú legyen
+Töltsük ki az adott oszlop értékét!
+
+alter table University.Teacher add prereq map<text,int>;
+
+UPDATE University.Teacher SET prereq = {'Database1':4, 'Database2':5} where id=1;
+#insert into University.Course(id,prereq) values(1,{'DataScience':'Database', 'Neural Network':'Artificial Intelligence'});
+
+

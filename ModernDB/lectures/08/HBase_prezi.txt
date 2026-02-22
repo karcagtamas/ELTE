@@ -1,0 +1,7 @@
+https://www.slideshare.net/Simplilearn/hbase-tutorial-for-beginners-hbase-architecture-hbase-tutorial-hadoop-tutorial-simplilearn/Simplilearn/hbase-tutorial-for-beginners-hbase-architecture-hbase-tutorial-hadoop-tutorial-simplilearn
+
+https://www.guru99.com/hbase-shell-general-commands.html
+
+https://llimllib.github.io/bloomfilter-tutorial/
+
+https://hub.docker.com/r/harisekhon/hbase

@@ -1,0 +1,8 @@
+for $b in
+doc("http://ggombos.web.elte.hu/oktatas/KorszeruAdatbazisok/gyakorlat/week2_Xml/inputok/elso_konyvesbolt.xml")/bookstore/book
+where $b/year=2005 and $b[@category="CHILDREN"]
+return $b/price/text()
+
+for $b at $i in
+doc("http://ggombos.web.elte.hu/oktatas/KorszeruAdatbazisok/gyakorlat/week2_Xml/inputok/elso_konyvesbolt.xml")/bookstore/book/author
+return <author id="{$i}">{$b/text()}</author>

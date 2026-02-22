@@ -1,0 +1,34 @@
+[[outputs.influxdb_v2]]
+  urls = ["http://localhost:8086"]
+  token = "_HZwoerregwOXrWFQlnP3z2C2MTEpHT6J1vecCHEyYZnJxA0C7JadApOSGYKDPEIhq3bTTQFXaFo0Ci5WSNY5w=="
+  organization = "ELTE"
+  bucket = "telegraf"
+
+
+###############################################################################
+#                            INPUT PLUGINS                                    #
+###############################################################################
+
+
+# Read metrics about cpu usage
+[[inputs.cpu]]
+  percpu = true
+  totalcpu = true
+  collect_cpu_time = false
+  report_active = false
+  core_tags = false
+
+
+# Read metrics about disk usage by mount point
+[[inputs.disk]]
+  ignore_fs = ["tmpfs", "devtmpfs", "devfs", "iso9660", "overlay", "aufs", "squashfs"]
+
+
+# Read metrics about disk IO by device
+[[inputs.diskio]]
+
+[[inputs.mem]]
+
+
+# Gather metrics about network interfaces
+[[inputs.net]]
