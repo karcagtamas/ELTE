@@ -1,0 +1,13 @@
+Titkosítás a TRIVIUM folyamtitkosítóval
+
+A TRIVIUM egy (elsősorban) hardverre optimalizált folyamtitkosító. A tervezés során arra voltak kíváncsiak, hogy
+mennyire lehet leegyszerűsíteni egy folyamtitkosítót, hogy a biztonság és gyorsaság ne sérüljön.
+
+Az algorimtus specifikációja: https://www.ecrypt.eu.org/stream/p3ciphers/trivium/trivium_p3.pdf
+
+A feladat egy Trivium nevű osztály készítése, ami az algoritmust implementálja:
+- az osztály konstruktora ellenőrzi az IV és kulcs hosszát, valamint beállítja a rendszer kezdeti állapotát
+- legyen egy `keystream()` metódusa, ami a titkosításhoz generálja a kulcsot
+- legyen egy `reset()` metódusa, ami visszaállítja a rendszert a kezdeti állapotba.
+
+Készítsünk továbbá két függvényt, amik a titkosítást és visszafejtést valósítják meg. Ellenőrizzük a helyességét!

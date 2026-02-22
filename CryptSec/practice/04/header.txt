@@ -1,0 +1,4 @@
+P6
+# Created by GIMP version 2.10.30 PNM plug-in
+1024 432
+255
