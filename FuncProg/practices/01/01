@@ -1,0 +1,28 @@
+- A haskellben minden fuggveny
+- Programozas fuggvenyekkel
+- Tipusos nyelv
+- Tipus signature
+
+- Fuggvenyek kiertekelese
+- ghci
+- :l => load
+- ghci 01.hs
+- :r => reload
+
+- Tipusok
+- Fel lehet cserelgetni a sorokat
+- Prefix, infix func using
+- Lusta kiertekeles
+
+- declaration and definition
+- Minden fuggveny
+
+- tipus es konstruktor lehet nagy betu csak
+- pure func
+  - parallel solutions
+  - state problem
+  - same input, same result
+  - does not impact other functions
+
+- static types
+- inmutable
